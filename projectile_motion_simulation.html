@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projectile Motion — Physics Simulation Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+    .fixed-canvas-frame {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      max-width: 800px;
+    }
+    input[type="range"] {
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 text-left group focus:outline-none">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm group-hover:bg-blue-700 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 17c3.5-8 8.5-11 14-6m0 0h-4m4 0v4" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-bold text-slate-900 tracking-tight text-base sm:text-lg block leading-none">Physics Simulation Lab</span>
+          <span class="text-xs text-slate-500 font-medium">Interactive Browser Modules</span>
+        </div>
+      </a>
+
+      <a href="index.html" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition">
+        <span>← Back to Simulations</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Projectile Motion Simulator</h1>
+        <p class="text-sm text-slate-600">Fixed 200 m × 115 m coordinate frame • Standard Gravity (g = 9.81 m/s²)</p>
+      </div>
+      <a href="index.html" class="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition">
+        <span>← Back to Landing Page</span>
+      </a>
+    </div>
+
+    <!-- Fixed Aspect-Ratio Simulation Viewport -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-3 sm:p-5 shadow-sm flex flex-col items-center">
+      <div class="fixed-canvas-frame bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner relative">
+        <canvas id="sim-canvas" width="800" height="450" class="w-full h-full block"></canvas>
+      </div>
+
+      <!-- Telemetry Cards -->
+      <div class="w-full max-w-[800px] grid grid-cols-3 gap-3 sm:gap-4 mt-4">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 text-center">
+          <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 block">Highest Point (Apex)</span>
+          <span id="readout-max-height" class="text-base sm:text-xl font-bold text-amber-600 font-mono-code mt-1 block">-- m</span>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 text-center">
+          <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 block">Total Distance (Range)</span>
+          <span id="readout-distance" class="text-base sm:text-xl font-bold text-emerald-600 font-mono-code mt-1 block">-- m</span>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 text-center">
+          <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 block">Flight Time</span>
+          <span id="readout-time" class="text-base sm:text-xl font-bold text-blue-600 font-mono-code mt-1 block">-- s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm max-w-[800px] mx-auto space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+        <!-- Slider 1: Launch Height (h0) -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2">
+            <label for="slider-height" class="text-sm font-semibold text-slate-700">Launch Height (h₀)</label>
+            <span id="val-height" class="font-mono-code text-sm font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">10.0 m</span>
+          </div>
+          <input id="slider-height" type="range" min="0" max="30" step="0.5" value="10" class="w-full h-2 bg-slate-200 rounded-lg" />
+          <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-mono-code">
+            <span>0 m</span>
+            <span>30 m</span>
+          </div>
+        </div>
+
+        <!-- Slider 2: Launch Angle (theta) -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2">
+            <label for="slider-angle" class="text-sm font-semibold text-slate-700">Launch Angle (θ)</label>
+            <span id="val-angle" class="font-mono-code text-sm font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">45°</span>
+          </div>
+          <input id="slider-angle" type="range" min="0" max="90" step="1" value="45" class="w-full h-2 bg-slate-200 rounded-lg" />
+          <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-mono-code">
+            <span>0°</span>
+            <span>90°</span>
+          </div>
+        </div>
+
+        <!-- Slider 3: Initial Velocity (v0) -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2">
+            <label for="slider-velocity" class="text-sm font-semibold text-slate-700">Initial Velocity (v₀)</label>
+            <span id="val-velocity" class="font-mono-code text-sm font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">30.0 m/s</span>
+          </div>
+          <input id="slider-velocity" type="range" min="1" max="40" step="0.5" value="30" class="w-full h-2 bg-slate-200 rounded-lg" />
+          <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-mono-code">
+            <span>1 m/s</span>
+            <span>40 m/s (Max 200m)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+        <p class="text-xs text-slate-500">
+          Velocity is capped at <strong class="text-slate-700">40.0 m/s</strong> so every trajectory stays within the <strong class="text-slate-700">200 m × 115 m</strong> viewport.
+        </p>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button id="btn-reset" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
+            Reset
+          </button>
+          <button id="btn-launch" class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
+            <span>🚀 Launch Projectile</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- PYTHON-STYLE PROJECTILE SIMULATION ENGINE -->
+  <script>
+    const PHYSICS_CONFIG = {
+      GRAVITY: 9.81,
+      WORLD_WIDTH_M: 200.0,
+      WORLD_HEIGHT_M: 115.0,
+      MAX_VELOCITY: 40.0,
+      CANVAS_WIDTH: 800,
+      CANVAS_HEIGHT: 450,
+      PADDING: { top: 28, right: 32, bottom: 38, left: 48 }
+    };
+
+    function deg_to_rad(degrees) {
+      return (degrees * Math.PI) / 180.0;
+    }
+
+    function calculate_kinematics(h0, angle_deg, v0, g = PHYSICS_CONFIG.GRAVITY) {
+      const theta = deg_to_rad(angle_deg);
+      const vx = v0 * Math.cos(theta);
+      const vy = v0 * Math.sin(theta);
+
+      const t_apex = vy > 0 ? vy / g : 0.0;
+      const apex_x = vx * t_apex;
+      const apex_y = h0 + (vy * t_apex) - (0.5 * g * t_apex * t_apex);
+
+      const discriminant = (vy * vy) + (2.0 * g * h0);
+      const total_time = (vy + Math.sqrt(Math.max(0, discriminant))) / g;
+      const total_distance = vx * total_time;
+
+      return { vx, vy, t_apex, apex_x, apex_y, total_time, total_distance };
+    }
+
+    class ProjectileSimulation {
+      constructor(canvas_id) {
+        this.canvas = document.getElementById(canvas_id);
+        this.ctx = this.canvas.getContext("2d");
+
+        this.h0 = 10.0;
+        this.angle_deg = 45.0;
+        this.v0 = 30.0;
+
+        this.is_flying = false;
+        this.is_finished = false;
+        this.elapsed_time = 0.0;
+        this.last_frame_ms = null;
+        this.trail_points = [{ x: 0, y: this.h0 }];
+        this.flight_stats = calculate_kinematics(this.h0, this.angle_deg, this.v0);
+
+        this.bind_controls();
+        this.render();
+      }
+
+      world_to_canvas(x_meters, y_meters) {
+        const pad = PHYSICS_CONFIG.PADDING;
+        const plot_w = PHYSICS_CONFIG.CANVAS_WIDTH - pad.left - pad.right;
+        const plot_h = PHYSICS_CONFIG.CANVAS_HEIGHT - pad.top - pad.bottom;
+
+        const px = pad.left + (x_meters / PHYSICS_CONFIG.WORLD_WIDTH_M) * plot_w;
+        const py = (PHYSICS_CONFIG.CANVAS_HEIGHT - pad.bottom) - (y_meters / PHYSICS_CONFIG.WORLD_HEIGHT_M) * plot_h;
+        return { x: px, y: py };
+      }
+
+      bind_controls() {
+        const slider_h = document.getElementById("slider-height");
+        const slider_a = document.getElementById("slider-angle");
+        const slider_v = document.getElementById("slider-velocity");
+
+        const val_h = document.getElementById("val-height");
+        const val_a = document.getElementById("val-angle");
+        const val_v = document.getElementById("val-velocity");
+
+        const update_parameters = () => {
+          this.h0 = parseFloat(slider_h.value);
+          this.angle_deg = parseFloat(slider_a.value);
+          this.v0 = parseFloat(slider_v.value);
+
+          val_h.textContent = `${this.h0.toFixed(1)} m`;
+          val_a.textContent = `${this.angle_deg.toFixed(0)}°`;
+          val_v.textContent = `${this.v0.toFixed(1)} m/s`;
+
+          this.reset_flight();
+        };
+
+        slider_h.addEventListener("input", update_parameters);
+        slider_a.addEventListener("input", update_parameters);
+        slider_v.addEventListener("input", update_parameters);
+
+        document.getElementById("btn-launch").addEventListener("click", () => this.launch());
+        document.getElementById("btn-reset").addEventListener("click", () => this.reset_flight());
+      }
+
+      reset_flight() {
+        this.is_flying = false;
+        this.is_finished = false;
+        this.elapsed_time = 0.0;
+        this.last_frame_ms = null;
+        this.trail_points = [{ x: 0, y: this.h0 }];
+        this.flight_stats = calculate_kinematics(this.h0, this.angle_deg, this.v0);
+
+        document.getElementById("readout-max-height").textContent = "-- m";
+        document.getElementById("readout-distance").textContent = "-- m";
+        document.getElementById("readout-time").textContent = "-- s";
+
+        this.render();
+      }
+
+      launch() {
+        this.reset_flight();
+        this.is_flying = true;
+        this.last_frame_ms = performance.now();
+        requestAnimationFrame((now) => this.step_animation(now));
+      }
+
+      step_animation(now_ms) {
+        if (!this.is_flying) return;
+
+        const dt = Math.min((now_ms - this.last_frame_ms) / 1000.0, 0.05);
+        this.last_frame_ms = now_ms;
+        this.elapsed_time += dt * 1.35;
+
+        const stats = this.flight_stats;
+        if (this.elapsed_time >= stats.total_time) {
+          this.elapsed_time = stats.total_time;
+          this.is_flying = false;
+          this.is_finished = true;
+          this.trail_points.push({ x: stats.total_distance, y: 0.0 });
+          this.update_telemetry_cards();
+        } else {
+          const x = stats.vx * this.elapsed_time;
+          const y = Math.max(0, this.h0 + (stats.vy * this.elapsed_time) - (0.5 * PHYSICS_CONFIG.GRAVITY * this.elapsed_time ** 2));
+          this.trail_points.push({ x, y });
+        }
+
+        this.render();
+
+        if (this.is_flying) {
+          requestAnimationFrame((next_now) => this.step_animation(next_now));
+        }
+      }
+
+      update_telemetry_cards() {
+        const stats = this.flight_stats;
+        document.getElementById("readout-max-height").textContent = `${stats.apex_y.toFixed(2)} m`;
+        document.getElementById("readout-distance").textContent = `${stats.total_distance.toFixed(2)} m`;
+        document.getElementById("readout-time").textContent = `${stats.total_time.toFixed(2)} s`;
+      }
+
+      draw_grid_and_axes() {
+        const ctx = this.ctx;
+        const w = PHYSICS_CONFIG.CANVAS_WIDTH;
+        const h = PHYSICS_CONFIG.CANVAS_HEIGHT;
+        const pad = PHYSICS_CONFIG.PADDING;
+
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.font = "11px 'JetBrains Mono', monospace";
+        ctx.textAlign = "center";
+
+        for (let xm = 0; xm <= PHYSICS_CONFIG.WORLD_WIDTH_M; xm += 20) {
+          const pos = this.world_to_canvas(xm, 0);
+          ctx.strokeStyle = xm === 0 ? "#475569" : "#1e293b";
+          ctx.lineWidth = xm === 0 ? 1.5 : 1;
+          ctx.beginPath();
+          ctx.moveTo(pos.x, pad.top);
+          ctx.lineTo(pos.x, h - pad.bottom);
+          ctx.stroke();
+
+          ctx.fillStyle = "#94a3b8";
+          ctx.fillText(`${xm}m`, pos.x, h - pad.bottom + 18);
+        }
+
+        ctx.textAlign = "right";
+        for (let ym = 0; ym <= 100; ym += 20) {
+          const pos = this.world_to_canvas(0, ym);
+          ctx.strokeStyle = ym === 0 ? "#64748b" : "#1e293b";
+          ctx.lineWidth = ym === 0 ? 2 : 1;
+          ctx.beginPath();
+          ctx.moveTo(pad.left, pos.y);
+          ctx.lineTo(w - pad.right, pos.y);
+          ctx.stroke();
+
+          ctx.fillStyle = "#94a3b8";
+          ctx.fillText(`${ym}m`, pad.left - 8, pos.y + 4);
+        }
+
+        const ground_left = this.world_to_canvas(0, 0);
+        const ground_right = this.world_to_canvas(PHYSICS_CONFIG.WORLD_WIDTH_M, 0);
+        ctx.fillStyle = "#1e293b";
+        ctx.fillRect(ground_left.x, ground_left.y, ground_right.x - ground_left.x, 8);
+      }
+
+      draw_launcher() {
+        const ctx = this.ctx;
+        const base = this.world_to_canvas(0, 0);
+        const top = this.world_to_canvas(0, this.h0);
+
+        if (this.h0 > 0) {
+          ctx.fillStyle = "#334155";
+          ctx.fillRect(top.x - 10, top.y, 20, base.y - top.y);
+          ctx.strokeStyle = "#64748b";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(top.x - 10, top.y, 20, base.y - top.y);
+        }
+
+        const rad = deg_to_rad(this.angle_deg);
+        const barrel_len = 26;
+        const tip_x = top.x + Math.cos(rad) * barrel_len;
+        const tip_y = top.y - Math.sin(rad) * barrel_len;
+
+        if (!this.is_flying && !this.is_finished) {
+          const guide_len = 24 + this.v0 * 1.4;
+          ctx.save();
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = "rgba(96, 165, 250, 0.75)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(top.x, top.y);
+          ctx.lineTo(top.x + Math.cos(rad) * guide_len, top.y - Math.sin(rad) * guide_len);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 7;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(top.x, top.y);
+        ctx.lineTo(tip_x, tip_y);
+        ctx.stroke();
+
+        ctx.fillStyle = "#3b82f6";
+        ctx.beginPath();
+        ctx.arc(top.x, top.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      draw_trajectory_and_markers() {
+        const ctx = this.ctx;
+        if (this.trail_points.length === 0) return;
+
+        ctx.save();
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        this.trail_points.forEach((pt, idx) => {
+          const c = this.world_to_canvas(pt.x, pt.y);
+          if (idx === 0) ctx.moveTo(c.x, c.y);
+          else ctx.lineTo(c.x, c.y);
+        });
+        ctx.stroke();
+        ctx.restore();
+
+        const stats = this.flight_stats;
+        if ((this.is_flying && this.elapsed_time >= stats.t_apex) || this.is_finished) {
+          const apex_px = this.world_to_canvas(stats.apex_x, stats.apex_y);
+          const apex_ground = this.world_to_canvas(stats.apex_x, 0);
+
+          ctx.save();
+          ctx.setLineDash([3, 3]);
+          ctx.strokeStyle = "rgba(251, 191, 36, 0.45)";
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(apex_px.x, apex_px.y);
+          ctx.lineTo(apex_ground.x, apex_ground.y);
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.fillStyle = "#fbbf24";
+          ctx.beginPath();
+          ctx.arc(apex_px.x, apex_px.y, 5.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          const label = `Max Height: ${stats.apex_y.toFixed(1)}m`;
+          ctx.font = "bold 11px 'Inter', sans-serif";
+          const text_w = ctx.measureText(label).width;
+          const badge_x = Math.min(Math.max(apex_px.x - text_w / 2 - 6, 52), PHYSICS_CONFIG.CANVAS_WIDTH - text_w - 45);
+          const badge_y = Math.max(apex_px.y - 26, 8);
+
+          ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+          ctx.strokeStyle = "#fbbf24";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.roundRect(badge_x, badge_y, text_w + 12, 20, 5);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#fde68a";
+          ctx.textAlign = "left";
+          ctx.fillText(label, badge_x + 6, badge_y + 14);
+        }
+
+        if (this.is_finished) {
+          const land_px = this.world_to_canvas(stats.total_distance, 0);
+
+          ctx.fillStyle = "#10b981";
+          ctx.beginPath();
+          ctx.arc(land_px.x, land_px.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+
+          const dist_label = `Distance: ${stats.total_distance.toFixed(1)}m`;
+          ctx.font = "bold 11px 'Inter', sans-serif";
+          const tw = ctx.measureText(dist_label).width;
+          const bx = Math.min(Math.max(land_px.x - tw / 2 - 6, 52), PHYSICS_CONFIG.CANVAS_WIDTH - tw - 40);
+          const by = land_px.y - 28;
+
+          ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+          ctx.strokeStyle = "#10b981";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.roundRect(bx, by, tw + 12, 20, 5);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = "#a7f3d0";
+          ctx.textAlign = "left";
+          ctx.fillText(dist_label, bx + 6, by + 14);
+        }
+
+        const current = this.trail_points[this.trail_points.length - 1];
+        const ball_px = this.world_to_canvas(current.x, current.y);
+        ctx.fillStyle = "#f97316";
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ball_px.x, ball_px.y, 6.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      render() {
+        this.draw_grid_and_axes();
+        this.draw_launcher();
+        this.draw_trajectory_and_markers();
+      }
+    }
+
+    window.onload = () => new ProjectileSimulation("sim-canvas");
+  </script>
+</body>
+</html>

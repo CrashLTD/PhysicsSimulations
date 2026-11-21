@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boyle's Law Simulation — Physics Simulation Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    input[type="range"] {
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 text-left group focus:outline-none">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm group-hover:bg-blue-700 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 17c3.5-8 8.5-11 14-6m0 0h-4m4 0v4" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-bold text-slate-900 tracking-tight text-base sm:text-lg block leading-none">Physics Simulation Lab</span>
+          <span class="text-xs text-slate-500 font-medium">Interactive Browser Modules</span>
+        </div>
+      </a>
+
+      <a href="index.html" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition">
+        <span>← Back to Simulations</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+      <div>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 mb-2">
+          Interactive Science Lab · Constant temperature
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Boyle's Law Simulation</h1>
+        <p class="text-sm sm:text-base text-slate-600 mt-1">Move the piston or adjust the volume slider to explore how gas pressure changes.</p>
+      </div>
+      <a href="index.html" class="self-start inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition shrink-0">
+        <span>← Back to Landing Page</span>
+      </a>
+    </div>
+
+    <!-- Two-Column Experiment & Graph Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Left Card: Gas Inside a Movable Piston -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-5">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-3">Gas inside a movable piston</h2>
+
+          <!-- Fixed-Aspect Piston Canvas Container -->
+          <div class="w-full max-w-[380px] mx-auto aspect-[360/270] rounded-xl overflow-hidden select-none">
+            <canvas id="boyles-piston-canvas" width="360" height="270" class="w-full h-full block cursor-ns-resize touch-none"></canvas>
+          </div>
+          <p class="text-center text-xs font-medium text-slate-500 mt-1">Drag the piston ↑↓</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Volume Control Slider -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label for="boyles-slider-volume" class="text-sm font-bold text-slate-800">
+                Gas volume: <span id="boyles-label-volume" class="text-slate-900">2.0 L</span>
+              </label>
+            </div>
+            <input id="boyles-slider-volume" type="range" min="0.5" max="4.0" step="0.1" value="2.0" class="w-full h-2 bg-slate-200 rounded-lg" />
+            <div class="flex justify-between text-xs text-slate-500 mt-1.5 font-medium">
+              <span>0.5 L · Compressed</span>
+              <span>4.0 L · Expanded</span>
+            </div>
+          </div>
+
+          <!-- Readout Boxes -->
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3.5 sm:p-4">
+              <span class="text-xs font-medium text-slate-500 block">Volume</span>
+              <span id="boyles-readout-volume" class="text-xl sm:text-2xl font-bold text-blue-700 mt-1 block">2.0 L</span>
+            </div>
+            <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3.5 sm:p-4">
+              <span class="text-xs font-medium text-slate-500 block">Absolute pressure</span>
+              <span id="boyles-readout-pressure" class="text-xl sm:text-2xl font-bold text-blue-700 mt-1 block">100.0 kPa</span>
+            </div>
+          </div>
+
+          <!-- Reset Button -->
+          <div>
+            <button id="boyles-btn-reset" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold text-sm shadow-sm transition">
+              Reset experiment
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Card: Pressure vs. Volume Graph & Formula -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-5">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-3">Pressure vs. Volume</h2>
+
+          <!-- Fixed-Aspect Graph Canvas -->
+          <div class="w-full max-w-[440px] mx-auto aspect-[440/270] rounded-xl overflow-hidden">
+            <canvas id="boyles-graph-canvas" width="440" height="270" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Formula Banner -->
+          <div class="bg-slate-100/90 border border-slate-200/80 rounded-xl py-3 px-4 text-center">
+            <span class="text-lg sm:text-xl font-bold text-blue-700 tracking-wide">P₁V₁ = P₂V₂</span>
+          </div>
+
+          <!-- Dynamic Educational Explanation -->
+          <div class="space-y-2.5 text-sm text-slate-600 leading-relaxed">
+            <p>
+              Reference condition: <strong class="text-slate-900">2.0 L at 100 kPa</strong>. At constant temperature, the product <strong class="text-slate-900">PV = 200 kPa·L</strong> remains constant.
+            </p>
+            <p id="boyles-dynamic-status" class="text-slate-600">
+              At the reference state, the gas occupies 2.0 L and exerts 100.0 kPa.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Model Assumptions Footer Note -->
+    <p class="text-xs text-slate-500 pt-1">
+      Model assumptions: fixed amount of ideal gas, constant temperature, and absolute pressure. The particle animation is illustrative and not to scale.
+    </p>
+
+  </main>
+
+  <!-- PYTHON-STYLE BOYLE'S LAW SIMULATION ENGINE -->
+  <script>
+    const BOYLES_CONFIG = {
+      CONSTANT_PV: 200.0,
+      REF_VOLUME_L: 2.0,
+      MIN_VOLUME_L: 0.5,
+      MAX_VOLUME_L: 4.0,
+      MAX_PRESSURE_KPA: 400.0,
+      PARTICLE_COUNT: 28
+    };
+
+    function calculate_boyles_pressure(volume_l, pv_constant = BOYLES_CONFIG.CONSTANT_PV) {
+      return pv_constant / Math.max(volume_l, BOYLES_CONFIG.MIN_VOLUME_L);
+    }
+
+    class BoylesLawSimulation {
+      constructor(piston_canvas_id, graph_canvas_id) {
+        this.piston_canvas = document.getElementById(piston_canvas_id);
+        this.piston_ctx = this.piston_canvas.getContext("2d");
+
+        this.graph_canvas = document.getElementById(graph_canvas_id);
+        this.graph_ctx = this.graph_canvas.getContext("2d");
+
+        this.chamber = { x: 82, y: 16, w: 196, h: 236, piston_h: 16 };
+        this.volume_l = BOYLES_CONFIG.REF_VOLUME_L;
+        this.is_dragging = false;
+
+        this.particles = this.create_particles(BOYLES_CONFIG.PARTICLE_COUNT);
+        this.bind_events();
+        this.sync_ui_and_graph();
+        this.start();
+      }
+
+      create_particles(count) {
+        const list = [];
+        const top_y = this.get_piston_y() + this.chamber.piston_h + 6;
+        const bottom_y = this.chamber.y + this.chamber.h - 6;
+
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const base_speed = 1.3 + Math.random() * 1.1;
+          list.push({
+            x: this.chamber.x + 12 + Math.random() * (this.chamber.w - 24),
+            y: top_y + Math.random() * Math.max(12, bottom_y - top_y),
+            vx: Math.cos(angle) * base_speed,
+            vy: Math.sin(angle) * base_speed,
+            r: 3.6
+          });
+        }
+        return list;
+      }
+
+      get_piston_y() {
+        const min_chamber_h = 34;
+        const max_chamber_h = this.chamber.h - this.chamber.piston_h - 14;
+        const ratio = (this.volume_l - BOYLES_CONFIG.MIN_VOLUME_L) /
+                      (BOYLES_CONFIG.MAX_VOLUME_L - BOYLES_CONFIG.MIN_VOLUME_L);
+        const gas_height_px = min_chamber_h + ratio * (max_chamber_h - min_chamber_h);
+        return (this.chamber.y + this.chamber.h) - gas_height_px - this.chamber.piston_h;
+      }
+
+      set_volume_from_pointer_y(canvas_y) {
+        const min_chamber_h = 34;
+        const max_chamber_h = this.chamber.h - this.chamber.piston_h - 14;
+        const target_piston_y = canvas_y - (this.chamber.piston_h / 2);
+        const gas_height_px = (this.chamber.y + this.chamber.h) - target_piston_y - this.chamber.piston_h;
+
+        const clamped_h = Math.max(min_chamber_h, Math.min(max_chamber_h, gas_height_px));
+        const ratio = (clamped_h - min_chamber_h) / (max_chamber_h - min_chamber_h);
+        const raw_vol = BOYLES_CONFIG.MIN_VOLUME_L + ratio * (BOYLES_CONFIG.MAX_VOLUME_L - BOYLES_CONFIG.MIN_VOLUME_L);
+
+        this.set_volume(Math.round(raw_vol * 10) / 10);
+      }
+
+      set_volume(new_volume_l) {
+        this.volume_l = Math.max(BOYLES_CONFIG.MIN_VOLUME_L, Math.min(BOYLES_CONFIG.MAX_VOLUME_L, new_volume_l));
+
+        const gas_top = this.get_piston_y() + this.chamber.piston_h + 5;
+        const gas_bottom = this.chamber.y + this.chamber.h - 5;
+        for (const p of this.particles) {
+          if (p.y < gas_top) {
+            p.y = gas_top + Math.random() * Math.max(4, (gas_bottom - gas_top) * 0.4);
+          }
+          if (p.y > gas_bottom) {
+            p.y = gas_bottom;
+          }
+        }
+
+        this.sync_ui_and_graph();
+      }
+
+      bind_events() {
+        const slider = document.getElementById("boyles-slider-volume");
+        const btn_reset = document.getElementById("boyles-btn-reset");
+
+        slider.addEventListener("input", (e) => this.set_volume(parseFloat(e.target.value)));
+        btn_reset.addEventListener("click", () => this.set_volume(BOYLES_CONFIG.REF_VOLUME_L));
+
+        const get_canvas_y = (client_y) => {
+          const rect = this.piston_canvas.getBoundingClientRect();
+          return ((client_y - rect.top) / rect.height) * this.piston_canvas.height;
+        };
+
+        this.piston_canvas.addEventListener("mousedown", (e) => {
+          this.is_dragging = true;
+          this.set_volume_from_pointer_y(get_canvas_y(e.clientY));
+        });
+
+        window.addEventListener("mousemove", (e) => {
+          if (!this.is_dragging) return;
+          this.set_volume_from_pointer_y(get_canvas_y(e.clientY));
+        });
+
+        window.addEventListener("mouseup", () => { this.is_dragging = false; });
+
+        this.piston_canvas.addEventListener("touchstart", (e) => {
+          if (e.touches.length > 0) {
+            this.is_dragging = true;
+            this.set_volume_from_pointer_y(get_canvas_y(e.touches[0].clientY));
+          }
+        }, { passive: true });
+
+        this.piston_canvas.addEventListener("touchmove", (e) => {
+          if (!this.is_dragging || e.touches.length === 0) return;
+          this.set_volume_from_pointer_y(get_canvas_y(e.touches[0].clientY));
+        }, { passive: true });
+
+        window.addEventListener("touchend", () => { this.is_dragging = false; });
+      }
+
+      start() {
+        const loop = () => {
+          this.update_particles();
+          this.draw_piston_chamber();
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+
+      update_particles() {
+        const left_bound = this.chamber.x + 6;
+        const right_bound = this.chamber.x + this.chamber.w - 6;
+        const top_bound = this.get_piston_y() + this.chamber.piston_h + 5;
+        const bottom_bound = this.chamber.y + this.chamber.h - 5;
+
+        const pressure_ratio = calculate_boyles_pressure(this.volume_l) / 100.0;
+        const speed_factor = 0.85 + Math.min(pressure_ratio, 3.0) * 0.15;
+
+        for (const p of this.particles) {
+          p.x += p.vx * speed_factor;
+          p.y += p.vy * speed_factor;
+
+          if (p.x - p.r < left_bound) {
+            p.x = left_bound + p.r;
+            p.vx = Math.abs(p.vx);
+          } else if (p.x + p.r > right_bound) {
+            p.x = right_bound - p.r;
+            p.vx = -Math.abs(p.vx);
+          }
+
+          if (p.y - p.r < top_bound) {
+            p.y = top_bound + p.r;
+            p.vy = Math.abs(p.vy);
+          } else if (p.y + p.r > bottom_bound) {
+            p.y = bottom_bound - p.r;
+            p.vy = -Math.abs(p.vy);
+          }
+        }
+      }
+
+      sync_ui_and_graph() {
+        const pressure = calculate_boyles_pressure(this.volume_l);
+
+        document.getElementById("boyles-slider-volume").value = this.volume_l.toFixed(1);
+        document.getElementById("boyles-label-volume").textContent = `${this.volume_l.toFixed(1)} L`;
+        document.getElementById("boyles-readout-volume").textContent = `${this.volume_l.toFixed(1)} L`;
+        document.getElementById("boyles-readout-pressure").textContent = `${pressure.toFixed(1)} kPa`;
+
+        const status_el = document.getElementById("boyles-dynamic-status");
+        if (Math.abs(this.volume_l - BOYLES_CONFIG.REF_VOLUME_L) < 0.05) {
+          status_el.textContent = `At the reference state, the gas occupies 2.0 L and exerts 100.0 kPa.`;
+        } else if (this.volume_l < BOYLES_CONFIG.REF_VOLUME_L) {
+          status_el.textContent = `When the gas is compressed to ${this.volume_l.toFixed(1)} L, particle wall collisions become more frequent and pressure rises to ${pressure.toFixed(1)} kPa.`;
+        } else {
+          status_el.textContent = `When the gas expands to ${this.volume_l.toFixed(1)} L, particles have more space to travel and pressure drops to ${pressure.toFixed(1)} kPa.`;
+        }
+
+        this.draw_pv_graph(this.volume_l, pressure);
+      }
+
+      draw_piston_chamber() {
+        const ctx = this.piston_ctx;
+        const w = this.piston_canvas.width;
+        const h = this.piston_canvas.height;
+        const ch = this.chamber;
+        const piston_y = this.get_piston_y();
+        const gas_top_y = piston_y + ch.piston_h;
+        const gas_height = (ch.y + ch.h) - gas_top_y;
+
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.fillStyle = "#e8eff7";
+        ctx.beginPath();
+        ctx.roundRect(ch.x, ch.y, ch.w, ch.h, 8);
+        ctx.fill();
+
+        const pressure = calculate_boyles_pressure(this.volume_l);
+        const tint_alpha = Math.min(0.45, 0.14 + (pressure / 400.0) * 0.28);
+        ctx.fillStyle = `rgba(59, 130, 246, ${tint_alpha.toFixed(3)})`;
+        ctx.beginPath();
+        ctx.roundRect(ch.x, gas_top_y, ch.w, gas_height, [0, 0, 8, 8]);
+        ctx.fill();
+
+        ctx.fillStyle = "#2563eb";
+        for (const p of this.particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.strokeStyle = "#7c93ad";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(ch.x, ch.y, ch.w, ch.h, 8);
+        ctx.stroke();
+
+        const shaft_w = 14;
+        const shaft_x = ch.x + (ch.w - shaft_w) / 2;
+        const shaft_top = Math.max(ch.y + 8, piston_y - 78);
+        ctx.fillStyle = "#94a3b8";
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(shaft_x, shaft_top, shaft_w, piston_y - shaft_top + 2, [4, 4, 0, 0]);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = this.is_dragging ? "#1d4ed8" : "#3b5978";
+        ctx.strokeStyle = "#1e293b";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(ch.x - 4, piston_y, ch.w + 8, ch.piston_h, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(255,255,255,0.45)";
+        ctx.lineWidth = 1.2;
+        const mid_x = ch.x + ch.w / 2;
+        const mid_y = piston_y + ch.piston_h / 2;
+        ctx.beginPath();
+        ctx.moveTo(mid_x - 16, mid_y - 2);
+        ctx.lineTo(mid_x + 16, mid_y - 2);
+        ctx.moveTo(mid_x - 16, mid_y + 2);
+        ctx.lineTo(mid_x + 16, mid_y + 2);
+        ctx.stroke();
+      }
+
+      draw_pv_graph(current_v, current_p) {
+        const ctx = this.graph_ctx;
+        const w = this.graph_canvas.width;
+        const h = this.graph_canvas.height;
+        const pad = { top: 20, right: 22, bottom: 42, left: 54 };
+        const plot_w = w - pad.left - pad.right;
+        const plot_h = h - pad.top - pad.bottom;
+
+        const v_min = BOYLES_CONFIG.MIN_VOLUME_L;
+        const v_max = BOYLES_CONFIG.MAX_VOLUME_L;
+        const p_max = BOYLES_CONFIG.MAX_PRESSURE_KPA;
+
+        const to_px = (v, p) => ({
+          x: pad.left + ((v - v_min) / (v_max - v_min)) * plot_w,
+          y: (h - pad.bottom) - (p / p_max) * plot_h
+        });
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.font = "11px 'Inter', sans-serif";
+        ctx.textAlign = "right";
+        for (let p = 0; p <= 400; p += 100) {
+          const pt = to_px(v_min, p);
+          ctx.strokeStyle = p === 0 ? "#475569" : "#e2e8f0";
+          ctx.lineWidth = p === 0 ? 1.5 : 1;
+          ctx.beginPath();
+          ctx.moveTo(pad.left, pt.y);
+          ctx.lineTo(w - pad.right, pt.y);
+          ctx.stroke();
+
+          ctx.fillStyle = "#64748b";
+          ctx.fillText(`${p}`, pad.left - 8, pt.y + 4);
+        }
+
+        const v_ticks = [0.5, 1, 2, 3, 4];
+        ctx.textAlign = "center";
+        for (const v of v_ticks) {
+          const pt = to_px(v, 0);
+          ctx.strokeStyle = v === 0.5 ? "#475569" : "#e2e8f0";
+          ctx.lineWidth = v === 0.5 ? 1.5 : 1;
+          ctx.beginPath();
+          ctx.moveTo(pt.x, pad.top);
+          ctx.lineTo(pt.x, h - pad.bottom);
+          ctx.stroke();
+
+          ctx.fillStyle = "#64748b";
+          ctx.fillText(`${v}`, pt.x, h - pad.bottom + 16);
+        }
+
+        ctx.fillStyle = "#475569";
+        ctx.font = "600 11px 'Inter', sans-serif";
+        ctx.fillText("Volume (L)", pad.left + plot_w / 2, h - 8);
+
+        ctx.save();
+        ctx.translate(15, pad.top + plot_h / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText("Pressure (kPa)", 0, 0);
+        ctx.restore();
+
+        const active_pt = to_px(current_v, current_p);
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, active_pt.y);
+        ctx.lineTo(active_pt.x, active_pt.y);
+        ctx.lineTo(active_pt.x, h - pad.bottom);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.strokeStyle = "#2563eb";
+        ctx.lineWidth = 2.8;
+        ctx.beginPath();
+        const steps = 120;
+        for (let i = 0; i <= steps; i++) {
+          const v = v_min + (i / steps) * (v_max - v_min);
+          const p = calculate_boyles_pressure(v);
+          const pt = to_px(v, p);
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = "#ea580c";
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(active_pt.x, active_pt.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+
+    window.onload = () => new BoylesLawSimulation("boyles-piston-canvas", "boyles-graph-canvas");
+  </script>
+</body>
+</html>

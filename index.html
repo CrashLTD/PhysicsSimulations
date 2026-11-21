@@ -5,35 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Physics Simulation Lab</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-    .font-mono-code {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    /* Strict fixed aspect ratio wrapper so the canvas never stretches or distorts on any screen */
-    .fixed-canvas-frame {
-      aspect-ratio: 16 / 9;
-      width: 100%;
-      max-width: 800px;
-    }
-    /* Custom subtle range slider styling */
-    input[type="range"] {
-      accent-color: #2563eb;
-      cursor: pointer;
-    }
+    body { font-family: 'Inter', sans-serif; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
 
-  <!-- ===================================================================== -->
-  <!-- TOP NAVIGATION BAR                                                    -->
-  <!-- ===================================================================== -->
+  <!-- TOP NAVIGATION BAR -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-      <button onclick="app.navigate('home')" class="flex items-center gap-2.5 text-left group focus:outline-none">
+      <a href="index.html" class="flex items-center gap-2.5 text-left group focus:outline-none">
         <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm group-hover:bg-blue-700 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 17c3.5-8 8.5-11 14-6m0 0h-4m4 0v4" />
@@ -43,1279 +25,155 @@
           <span class="font-bold text-slate-900 tracking-tight text-base sm:text-lg block leading-none">Physics Simulation Lab</span>
           <span class="text-xs text-slate-500 font-medium">Interactive Browser Modules</span>
         </div>
-      </button>
-
-      <!-- Global Back Button (Hidden on Landing Page) -->
-      <button id="nav-back-btn" onclick="app.navigate('home')" class="hidden items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition">
-        <span>← Back to Simulations</span>
-      </button>
+      </a>
     </div>
   </header>
 
-  <!-- ===================================================================== -->
-  <!-- MAIN CONTENT CONTAINER                                                -->
-  <!-- ===================================================================== -->
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
 
-    <!-- ------------------------------------------------------------------- -->
-    <!-- VIEW 1: LANDING PAGE HUB                                            -->
-    <!-- ------------------------------------------------------------------- -->
-    <section id="view-home" class="space-y-8">
-      <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <div class="max-w-2xl">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
-            Interactive Lab Portal
-          </span>
-          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-            Explore Classical Physics Visually
-          </h1>
-          <p class="text-slate-600 mt-2 text-sm sm:text-base leading-relaxed">
-            Select an interactive experiment below. Each simulation is built as a self-contained browser module with fixed-scale coordinate grids, real-time telemetry, and zero external dependencies.
-          </p>
-        </div>  
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
+          Interactive Lab Portal
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+          Explore Classical Physics Visually
+        </h1>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base leading-relaxed">
+          Select an interactive experiment below. Each simulation is built as its own standalone HTML page with fixed-scale coordinate grids, real-time telemetry, and zero external dependencies.
+        </p>
       </div>
+    </div>
 
-      <!-- Simulation Cards Grid -->
-      <div>
-        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">Available Lab Modules</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <!-- SIMULATION CARDS GRID -->
+    <div>
+      <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">Available Lab Modules</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-          <!-- Active Module: Projectile Motion -->
-          <div onclick="app.navigate('projectile')" class="group cursor-pointer bg-white border-2 border-blue-600/20 hover:border-blue-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 19h18M4 16Q11 3 19 16" />
-                  </svg>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Interactive Lab
-                </span>
-              </div>
-              <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Projectile Motion</h3>
-              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
-                Launch projectiles from an elevated platform across a fixed 200 m × 115 m range. Adjust launch height, angle, and initial velocity to inspect the apex and landing distance.
-              </p>
-            </div>
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-blue-600">
-              <span>Launch Simulation</span>
-              <span class="group-hover:translate-x-1 transition-transform">→</span>
-            </div>
-          </div>
-
-          <!-- Active Module: Boyle's Law -->
-          <div onclick="app.navigate('boyles')" class="group cursor-pointer bg-white border-2 border-blue-600/20 hover:border-blue-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-sky-50 text-blue-600 flex items-center justify-center">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 4h10v16H7zM12 4v6m-5 0h10" />
-                  </svg>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Interactive Lab
-                </span>
-              </div>
-              <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Boyle's Law</h3>
-              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
-                Move a gas piston or adjust the volume slider at constant temperature to observe inverse pressure changes (P₁V₁ = P₂V₂) and live particle collisions.
-              </p>
-            </div>
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-blue-600">
-              <span>Launch Simulation</span>
-              <span class="group-hover:translate-x-1 transition-transform">→</span>
-            </div>
-          </div>
-
-          <!-- Stub Module 1: Thermal Expansion -->
-          <div onclick="app.navigate('stub', 'Thermal Expansion')" class="group cursor-pointer bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0a3 3 0 100 6 3 3 0 000-6zm-4-8h8" />
-                  </svg>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
-                  Coming Soon
-                </span>
-              </div>
-              <h3 class="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition">Thermal Expansion</h3>
-              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
-                Observe linear and volumetric expansion of metal rods and liquids as temperature increases across different material coefficients.
-              </p>
-            </div>
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-slate-500 group-hover:text-slate-800">
-              <span>Open Module Stub</span>
-              <span>→</span>
-            </div>
-          </div>
-
-          <!-- Stub Module 2: Simple Harmonic Motion -->
-          <div onclick="app.navigate('stub', 'Simple Harmonic Motion')" class="group cursor-pointer bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9l4 4m-4-4l-4 4" />
-                  </svg>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
-                  Coming Soon
-                </span>
-              </div>
-              <h3 class="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition">Simple Harmonic Motion</h3>
-              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
-                Measure oscillation period, restoring force, and energy conservation on mass-spring systems and frictionless pendulums.
-              </p>
-            </div>
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-slate-500 group-hover:text-slate-800">
-              <span>Open Module Stub</span>
-              <span>→</span>
-            </div>
-          </div>
-
-          <!-- Stub Module 3: Wave Interference -->
-          <div onclick="app.navigate('stub', 'Wave Interference')" class="group cursor-pointer bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2 12c2.5-5 5.5-5 8 0s5.5 5 8 0 4-3 4 0" />
-                  </svg>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
-                  Coming Soon
-                </span>
-              </div>
-              <h3 class="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition">Wave Interference</h3>
-              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
-                Visualize constructive and destructive superposition of two coherent wave sources with adjustable wavelength and phase offset.
-              </p>
-            </div>
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-slate-500 group-hover:text-slate-800">
-              <span>Open Module Stub</span>
-              <span>→</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ------------------------------------------------------------------- -->
-    <!-- VIEW 2: PROJECTILE MOTION SIMULATION                                -->
-    <!-- ------------------------------------------------------------------- -->
-    <section id="view-projectile" class="hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Projectile Motion Simulator</h1>
-          <p class="text-sm text-slate-600">Fixed 200 m × 115 m coordinate frame • Standard Gravity (g = 9.81 m/s²)</p>
-        </div>
-        <button onclick="app.navigate('home')" class="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition">
-          <span>← Back to Landing Page</span>
-        </button>
-      </div>
-
-      <!-- Fixed Aspect-Ratio Simulation Viewport (Never stretches on desktop or mobile) -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-3 sm:p-5 shadow-sm flex flex-col items-center">
-        <div class="fixed-canvas-frame bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner relative">
-          <canvas id="sim-canvas" width="800" height="450" class="w-full h-full block"></canvas>
-        </div>
-
-        <!-- Telemetry Cards (Max Height, Total Distance, Time of Flight) -->
-        <div class="w-full max-w-[800px] grid grid-cols-3 gap-3 sm:gap-4 mt-4">
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 text-center">
-            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 block">Highest Point (Apex)</span>
-            <span id="readout-max-height" class="text-base sm:text-xl font-bold text-amber-600 font-mono-code mt-1 block">-- m</span>
-          </div>
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 text-center">
-            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 block">Total Distance (Range)</span>
-            <span id="readout-distance" class="text-base sm:text-xl font-bold text-emerald-600 font-mono-code mt-1 block">-- m</span>
-          </div>
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 sm:p-4 text-center">
-            <span class="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 block">Flight Time</span>
-            <span id="readout-time" class="text-base sm:text-xl font-bold text-blue-600 font-mono-code mt-1 block">-- s</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Control Panel (Sliders + Launch/Reset Buttons) -->
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm max-w-[800px] mx-auto space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-          <!-- Slider 1: Launch Height (h0) -->
-          <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
-            <div class="flex justify-between items-center mb-2">
-              <label for="slider-height" class="text-sm font-semibold text-slate-700">Launch Height (h₀)</label>
-              <span id="val-height" class="font-mono-code text-sm font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">10.0 m</span>
-            </div>
-            <input id="slider-height" type="range" min="0" max="30" step="0.5" value="10" class="w-full h-2 bg-slate-200 rounded-lg" />
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-mono-code">
-              <span>0 m</span>
-              <span>30 m</span>
-            </div>
-          </div>
-
-          <!-- Slider 2: Launch Angle (theta) -->
-          <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
-            <div class="flex justify-between items-center mb-2">
-              <label for="slider-angle" class="text-sm font-semibold text-slate-700">Launch Angle (θ)</label>
-              <span id="val-angle" class="font-mono-code text-sm font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">45°</span>
-            </div>
-            <input id="slider-angle" type="range" min="0" max="90" step="1" value="45" class="w-full h-2 bg-slate-200 rounded-lg" />
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-mono-code">
-              <span>0°</span>
-              <span>90°</span>
-            </div>
-          </div>
-
-          <!-- Slider 3: Initial Velocity (v0) - Delimited so max distance <= 200 m -->
-          <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
-            <div class="flex justify-between items-center mb-2">
-              <label for="slider-velocity" class="text-sm font-semibold text-slate-700">Initial Velocity (v₀)</label>
-              <span id="val-velocity" class="font-mono-code text-sm font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">30.0 m/s</span>
-            </div>
-            <input id="slider-velocity" type="range" min="1" max="40" step="0.5" value="30" class="w-full h-2 bg-slate-200 rounded-lg" />
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1 font-mono-code">
-              <span>1 m/s</span>
-              <span>40 m/s (Max 200m)</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
-          <p class="text-xs text-slate-500">
-            Velocity is capped at <strong class="text-slate-700">40.0 m/s</strong> so every trajectory stays within the <strong class="text-slate-700">200 m × 115 m</strong> viewport.
-          </p>
-          <div class="flex items-center gap-3 w-full sm:w-auto">
-            <button id="btn-reset" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
-              Reset
-            </button>
-            <button id="btn-launch" class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold text-sm shadow-sm transition flex items-center justify-center gap-2">
-              <span>🚀 Launch Projectile</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ------------------------------------------------------------------- -->
-    <!-- VIEW 2B: BOYLE'S LAW SIMULATION                                     -->
-    <!-- ------------------------------------------------------------------- -->
-    <section id="view-boyles" class="hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-        <div>
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 mb-2">
-            Interactive Science Lab · Constant temperature
-          </span>
-          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Boyle's Law Simulation</h1>
-          <p class="text-sm sm:text-base text-slate-600 mt-1">Move the piston or adjust the volume slider to explore how gas pressure changes.</p>
-        </div>
-        <button onclick="app.navigate('home')" class="self-start inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition shrink-0">
-          <span>← Back to Landing Page</span>
-        </button>
-      </div>
-
-      <!-- Two-Column Experiment & Graph Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Left Card: Gas Inside a Movable Piston -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-5">
+        <!-- Active Module: Projectile Motion -->
+        <a href="projectile.html" class="group bg-white border-2 border-blue-600/20 hover:border-blue-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-3">Gas inside a movable piston</h2>
-
-            <!-- Fixed-Aspect Piston Canvas Container -->
-            <div class="w-full max-w-[380px] mx-auto aspect-[360/270] rounded-xl overflow-hidden select-none">
-              <canvas id="boyles-piston-canvas" width="360" height="270" class="w-full h-full block cursor-ns-resize touch-none"></canvas>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 19h18M4 16Q11 3 19 16" />
+                </svg>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Interactive Lab
+              </span>
             </div>
-            <p class="text-center text-xs font-medium text-slate-500 mt-1">Drag the piston ↑↓</p>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Projectile Motion</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Launch projectiles from an elevated platform across a fixed 200 m × 115 m range. Adjust launch height, angle, and initial velocity to inspect the apex and landing distance.
+            </p>
           </div>
-
-          <div class="space-y-4">
-            <!-- Volume Control Slider -->
-            <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <label for="boyles-slider-volume" class="text-sm font-bold text-slate-800">
-                  Gas volume: <span id="boyles-label-volume" class="text-slate-900">2.0 L</span>
-                </label>
-              </div>
-              <input id="boyles-slider-volume" type="range" min="0.5" max="4.0" step="0.1" value="2.0" class="w-full h-2 bg-slate-200 rounded-lg" />
-              <div class="flex justify-between text-xs text-slate-500 mt-1.5 font-medium">
-                <span>0.5 L · Compressed</span>
-                <span>4.0 L · Expanded</span>
-              </div>
-            </div>
-
-            <!-- Readout Boxes -->
-            <div class="grid grid-cols-2 gap-3 sm:gap-4">
-              <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3.5 sm:p-4">
-                <span class="text-xs font-medium text-slate-500 block">Volume</span>
-                <span id="boyles-readout-volume" class="text-xl sm:text-2xl font-bold text-blue-700 mt-1 block">2.0 L</span>
-              </div>
-              <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-3.5 sm:p-4">
-                <span class="text-xs font-medium text-slate-500 block">Absolute pressure</span>
-                <span id="boyles-readout-pressure" class="text-xl sm:text-2xl font-bold text-blue-700 mt-1 block">100.0 kPa</span>
-              </div>
-            </div>
-
-            <!-- Reset Button -->
-            <div>
-              <button id="boyles-btn-reset" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold text-sm shadow-sm transition">
-                Reset experiment
-              </button>
-            </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-blue-600">
+            <span>Launch Simulation</span>
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
           </div>
-        </div>
+        </a>
 
-        <!-- Right Card: Pressure vs. Volume Graph & Formula -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-5">
+        <!-- Active Module: Boyle's Law -->
+        <a href="boyles.html" class="group bg-white border-2 border-blue-600/20 hover:border-blue-600 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between">
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 mb-3">Pressure vs. Volume</h2>
-
-            <!-- Fixed-Aspect Graph Canvas -->
-            <div class="w-full max-w-[440px] mx-auto aspect-[440/270] rounded-xl overflow-hidden">
-              <canvas id="boyles-graph-canvas" width="440" height="270" class="w-full h-full block"></canvas>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-blue-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 4h10v16H7zM12 4v6m-5 0h10" />
+                </svg>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                Interactive Lab
+              </span>
             </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Boyle's Law</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Move a gas piston or adjust the volume slider at constant temperature to observe inverse pressure changes (P₁V₁ = P₂V₂) and live particle collisions.
+            </p>
           </div>
-
-          <div class="space-y-4">
-            <!-- Formula Banner -->
-            <div class="bg-slate-100/90 border border-slate-200/80 rounded-xl py-3 px-4 text-center">
-              <span class="text-lg sm:text-xl font-bold text-blue-700 tracking-wide">P₁V₁ = P₂V₂</span>
-            </div>
-
-            <!-- Dynamic Educational Explanation -->
-            <div class="space-y-2.5 text-sm text-slate-600 leading-relaxed">
-              <p>
-                Reference condition: <strong class="text-slate-900">2.0 L at 100 kPa</strong>. At constant temperature, the product <strong class="text-slate-900">PV = 200 kPa·L</strong> remains constant.
-              </p>
-              <p id="boyles-dynamic-status" class="text-slate-600">
-                At the reference state, the gas occupies 2.0 L and exerts 100.0 kPa.
-              </p>
-            </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-blue-600">
+            <span>Launch Simulation</span>
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
           </div>
-        </div>
+        </a>
+
+        <!-- Stub Module 1: Thermal Expansion -->
+        <a href="stub.html?title=Thermal%20Expansion" class="group bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0a3 3 0 100 6 3 3 0 000-6zm-4-8h8" />
+                </svg>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                Coming Soon
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition">Thermal Expansion</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Observe linear and volumetric expansion of metal rods and liquids as temperature increases across different material coefficients.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-slate-500 group-hover:text-slate-800">
+            <span>Open Module Stub</span>
+            <span>→</span>
+          </div>
+        </a>
+
+        <!-- Stub Module 2: Simple Harmonic Motion -->
+        <a href="stub.html?title=Simple%20Harmonic%20Motion" class="group bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v9l4 4m-4-4l-4 4" />
+                </svg>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                Coming Soon
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition">Simple Harmonic Motion</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Measure oscillation period, restoring force, and energy conservation on mass-spring systems and frictionless pendulums.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-slate-500 group-hover:text-slate-800">
+            <span>Open Module Stub</span>
+            <span>→</span>
+          </div>
+        </a>
+
+        <!-- Stub Module 3: Wave Interference -->
+        <a href="stub.html?title=Wave%20Interference" class="group bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-sm hover:shadow transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2 12c2.5-5 5.5-5 8 0s5.5 5 8 0 4-3 4 0" />
+                </svg>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">
+                Coming Soon
+              </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition">Wave Interference</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Visualize constructive and destructive superposition of two coherent wave sources with adjustable wavelength and phase offset.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-semibold text-slate-500 group-hover:text-slate-800">
+            <span>Open Module Stub</span>
+            <span>→</span>
+          </div>
+        </a>
 
       </div>
-
-      <!-- Model Assumptions Footer Note -->
-      <p class="text-xs text-slate-500 pt-1">
-        Model assumptions: fixed amount of ideal gas, constant temperature, and absolute pressure. The particle animation is illustrative and not to scale.
-      </p>
-    </section>
-
-    <!-- ------------------------------------------------------------------- -->
-    <!-- VIEW 3: BLANK STUB PAGE FOR UPCOMING SIMULATIONS                    -->
-    <!-- ------------------------------------------------------------------- -->
-    <section id="view-stub" class="hidden">
-      <div class="bg-white border border-slate-200 rounded-2xl p-8 sm:p-14 text-center max-w-xl mx-auto shadow-sm mt-6 space-y-5">
-        <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center mx-auto">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-          </svg>
-        </div>
-        <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Simulation Module Stub</span>
-          <h1 id="stub-title" class="text-2xl font-bold text-slate-900 mt-1">Module Under Development</h1>
-          <p class="text-sm text-slate-600 mt-2 leading-relaxed">
-            This blank page is a placeholder route for future physics modules. Use the button below to return to the simulation directory.
-          </p>
-        </div>
-        <div class="pt-2">
-          <button onclick="app.navigate('home')" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition">
-            <span>← Back to Landing Page</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
+    </div>
   </main>
 
-  <!-- ===================================================================== -->
-  <!-- PYTHON-STYLE READABLE JAVASCRIPT SIMULATION ENGINE                    -->
-  <!-- ===================================================================== -->
-  <script>
-    /**
-     * PHYSICS_CONFIG
-     * Edit these constants just like Python variables to customize the lab.
-     * Note: At MAX_HEIGHT_M = 30m and MAX_VELOCITY = 40m/s:
-     *   - Max horizontal range (at ~40 deg) is ~192.8 m (strictly <= 200 m)
-     *   - Max vertical height (at 90 deg) is ~111.55 m (strictly <= 115 m)
-     */
-    const PHYSICS_CONFIG = {
-      GRAVITY: 9.81,          // Acceleration due to gravity (m/s^2)
-      WORLD_WIDTH_M: 200.0,   // Fixed horizontal coordinate span (0 to 200 meters)
-      WORLD_HEIGHT_M: 115.0,  // Fixed vertical coordinate span (0 to 115 meters)
-      MAX_VELOCITY: 40.0,     // Delimited velocity cap so range never exceeds 200 m
-      CANVAS_WIDTH: 800,      // Fixed internal canvas resolution width (px)
-      CANVAS_HEIGHT: 450,     // Fixed internal canvas resolution height (px)
-      PADDING: { top: 28, right: 32, bottom: 38, left: 48 }
-    };
-
-    /**
-     * BOYLES_CONFIG
-     * Clean Python-style constants for Boyle's Law (P1 * V1 = P2 * V2 = CONSTANT_PV)
-     */
-    const BOYLES_CONFIG = {
-      CONSTANT_PV: 200.0,     // Constant product P * V in kPa*L (2.0 L * 100.0 kPa)
-      REF_VOLUME_L: 2.0,      // Default starting volume (L)
-      MIN_VOLUME_L: 0.5,      // Maximum compression limit (L)
-      MAX_VOLUME_L: 4.0,      // Maximum expansion limit (L)
-      MAX_PRESSURE_KPA: 400.0,// Top Y-axis bound on P-V graph (kPa)
-      PARTICLE_COUNT: 28      // Number of illustrative gas molecules inside chamber
-    };
-
-    /**
-     * Helper math functions written in clean, Pythonic snake_case
-     */
-    function deg_to_rad(degrees) {
-      return (degrees * Math.PI) / 180.0;
-    }
-
-    function calculate_boyles_pressure(volume_l, pv_constant = BOYLES_CONFIG.CONSTANT_PV) {
-      return pv_constant / Math.max(volume_l, BOYLES_CONFIG.MIN_VOLUME_L);
-    }
-
-    function calculate_kinematics(h0, angle_deg, v0, g = PHYSICS_CONFIG.GRAVITY) {
-      const theta = deg_to_rad(angle_deg);
-      const vx = v0 * Math.cos(theta);
-      const vy = v0 * Math.sin(theta);
-
-      // Time to reach peak height (vy_final = 0)
-      const t_apex = vy > 0 ? vy / g : 0.0;
-      const apex_x = vx * t_apex;
-      const apex_y = h0 + (vy * t_apex) - (0.5 * g * t_apex * t_apex);
-
-      // Total flight time when y(t) = 0 using quadratic formula:
-      // -0.5*g*t^2 + vy*t + h0 = 0
-      const discriminant = (vy * vy) + (2.0 * g * h0);
-      const total_time = (vy + Math.sqrt(Math.max(0, discriminant))) / g;
-      const total_distance = vx * total_time;
-
-      return {
-        vx,
-        vy,
-        t_apex,
-        apex_x,
-        apex_y,
-        total_time,
-        total_distance
-      };
-    }
-
-    /**
-     * ProjectileSimulation Class
-     * Manages physics state, fixed-ratio coordinate projection, and canvas rendering.
-     */
-    class ProjectileSimulation {
-      constructor(canvas_id) {
-        this.canvas = document.getElementById(canvas_id);
-        this.ctx = this.canvas.getContext("2d");
-
-        // Initial launch parameters
-        this.h0 = 10.0;
-        this.angle_deg = 45.0;
-        this.v0 = 30.0;
-
-        // Animation state
-        this.is_flying = false;
-        this.is_finished = false;
-        this.elapsed_time = 0.0;
-        this.last_frame_ms = null;
-        this.trail_points = [];
-        this.flight_stats = calculate_kinematics(this.h0, this.angle_deg, this.v0);
-
-        this.bind_controls();
-        this.render();
-      }
-
-      /**
-       * Converts physics world coordinates (meters) to fixed canvas pixels
-       */
-      world_to_canvas(x_meters, y_meters) {
-        const pad = PHYSICS_CONFIG.PADDING;
-        const plot_w = PHYSICS_CONFIG.CANVAS_WIDTH - pad.left - pad.right;
-        const plot_h = PHYSICS_CONFIG.CANVAS_HEIGHT - pad.top - pad.bottom;
-
-        const px = pad.left + (x_meters / PHYSICS_CONFIG.WORLD_WIDTH_M) * plot_w;
-        const py = (PHYSICS_CONFIG.CANVAS_HEIGHT - pad.bottom) - (y_meters / PHYSICS_CONFIG.WORLD_HEIGHT_M) * plot_h;
-        return { x: px, y: py };
-      }
-
-      bind_controls() {
-        const slider_h = document.getElementById("slider-height");
-        const slider_a = document.getElementById("slider-angle");
-        const slider_v = document.getElementById("slider-velocity");
-
-        const val_h = document.getElementById("val-height");
-        const val_a = document.getElementById("val-angle");
-        const val_v = document.getElementById("val-velocity");
-
-        const update_parameters = () => {
-          this.h0 = parseFloat(slider_h.value);
-          this.angle_deg = parseFloat(slider_a.value);
-          this.v0 = parseFloat(slider_v.value);
-
-          val_h.textContent = `${this.h0.toFixed(1)} m`;
-          val_a.textContent = `${this.angle_deg.toFixed(0)}°`;
-          val_v.textContent = `${this.v0.toFixed(1)} m/s`;
-
-          this.reset_flight();
-        };
-
-        slider_h.addEventListener("input", update_parameters);
-        slider_a.addEventListener("input", update_parameters);
-        slider_v.addEventListener("input", update_parameters);
-
-        document.getElementById("btn-launch").addEventListener("click", () => this.launch());
-        document.getElementById("btn-reset").addEventListener("click", () => this.reset_flight());
-      }
-
-      reset_flight() {
-        this.is_flying = false;
-        this.is_finished = false;
-        this.elapsed_time = 0.0;
-        this.last_frame_ms = null;
-        this.trail_points = [{ x: 0, y: this.h0 }];
-        this.flight_stats = calculate_kinematics(this.h0, this.angle_deg, this.v0);
-
-        // Reset telemetry cards until launched
-        document.getElementById("readout-max-height").textContent = "-- m";
-        document.getElementById("readout-distance").textContent = "-- m";
-        document.getElementById("readout-time").textContent = "-- s";
-
-        this.render();
-      }
-
-      launch() {
-        this.reset_flight();
-        this.is_flying = true;
-        this.last_frame_ms = performance.now();
-        requestAnimationFrame((now) => this.step_animation(now));
-      }
-
-      step_animation(now_ms) {
-        if (!this.is_flying) return;
-
-        // Calculate real-time delta in seconds (clamped for tab-switch safety)
-        const dt = Math.min((now_ms - this.last_frame_ms) / 1000.0, 0.05);
-        this.last_frame_ms = now_ms;
-
-        // 1.35x playback speed keeps long 200m flights crisp and engaging
-        this.elapsed_time += dt * 1.35;
-
-        const stats = this.flight_stats;
-        if (this.elapsed_time >= stats.total_time) {
-          this.elapsed_time = stats.total_time;
-          this.is_flying = false;
-          this.is_finished = true;
-          this.trail_points.push({ x: stats.total_distance, y: 0.0 });
-          this.update_telemetry_cards();
-        } else {
-          const x = stats.vx * this.elapsed_time;
-          const y = Math.max(0, this.h0 + (stats.vy * this.elapsed_time) - (0.5 * PHYSICS_CONFIG.GRAVITY * this.elapsed_time ** 2));
-          this.trail_points.push({ x, y });
-        }
-
-        this.render();
-
-        if (this.is_flying) {
-          requestAnimationFrame((next_now) => this.step_animation(next_now));
-        }
-      }
-
-      update_telemetry_cards() {
-        const stats = this.flight_stats;
-        document.getElementById("readout-max-height").textContent = `${stats.apex_y.toFixed(2)} m`;
-        document.getElementById("readout-distance").textContent = `${stats.total_distance.toFixed(2)} m`;
-        document.getElementById("readout-time").textContent = `${stats.total_time.toFixed(2)} s`;
-      }
-
-      draw_grid_and_axes() {
-        const ctx = this.ctx;
-        const w = PHYSICS_CONFIG.CANVAS_WIDTH;
-        const h = PHYSICS_CONFIG.CANVAS_HEIGHT;
-        const pad = PHYSICS_CONFIG.PADDING;
-
-        // Background
-        ctx.fillStyle = "#0f172a";
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.font = "11px 'JetBrains Mono', monospace";
-        ctx.textAlign = "center";
-
-        // Vertical gridlines every 20 meters (0 to 200 m)
-        for (let xm = 0; xm <= PHYSICS_CONFIG.WORLD_WIDTH_M; xm += 20) {
-          const pos = this.world_to_canvas(xm, 0);
-          ctx.strokeStyle = xm === 0 ? "#475569" : "#1e293b";
-          ctx.lineWidth = xm === 0 ? 1.5 : 1;
-          ctx.beginPath();
-          ctx.moveTo(pos.x, pad.top);
-          ctx.lineTo(pos.x, h - pad.bottom);
-          ctx.stroke();
-
-          ctx.fillStyle = "#94a3b8";
-          ctx.fillText(`${xm}m`, pos.x, h - pad.bottom + 18);
-        }
-
-        // Horizontal gridlines every 20 meters (0 to 100 m) + top bound line (115 m)
-        ctx.textAlign = "right";
-        for (let ym = 0; ym <= 100; ym += 20) {
-          const pos = this.world_to_canvas(0, ym);
-          ctx.strokeStyle = ym === 0 ? "#64748b" : "#1e293b";
-          ctx.lineWidth = ym === 0 ? 2 : 1;
-          ctx.beginPath();
-          ctx.moveTo(pad.left, pos.y);
-          ctx.lineTo(w - pad.right, pos.y);
-          ctx.stroke();
-
-          ctx.fillStyle = "#94a3b8";
-          ctx.fillText(`${ym}m`, pad.left - 8, pos.y + 4);
-        }
-
-        // Ground strip
-        const ground_left = this.world_to_canvas(0, 0);
-        const ground_right = this.world_to_canvas(PHYSICS_CONFIG.WORLD_WIDTH_M, 0);
-        ctx.fillStyle = "#1e293b";
-        ctx.fillRect(ground_left.x, ground_left.y, ground_right.x - ground_left.x, 8);
-      }
-
-      draw_launcher() {
-        const ctx = this.ctx;
-        const base = this.world_to_canvas(0, 0);
-        const top = this.world_to_canvas(0, this.h0);
-
-        // Draw elevation tower if h0 > 0
-        if (this.h0 > 0) {
-          ctx.fillStyle = "#334155";
-          ctx.fillRect(top.x - 10, top.y, 20, base.y - top.y);
-          ctx.strokeStyle = "#64748b";
-          ctx.lineWidth = 1;
-          ctx.strokeRect(top.x - 10, top.y, 20, base.y - top.y);
-        }
-
-        // Draw aiming guide vector before launch
-        const rad = deg_to_rad(this.angle_deg);
-        const barrel_len = 26;
-        const tip_x = top.x + Math.cos(rad) * barrel_len;
-        const tip_y = top.y - Math.sin(rad) * barrel_len;
-
-        if (!this.is_flying && !this.is_finished) {
-          const guide_len = 24 + this.v0 * 1.4;
-          ctx.save();
-          ctx.setLineDash([4, 4]);
-          ctx.strokeStyle = "rgba(96, 165, 250, 0.75)";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(top.x, top.y);
-          ctx.lineTo(top.x + Math.cos(rad) * guide_len, top.y - Math.sin(rad) * guide_len);
-          ctx.stroke();
-          ctx.restore();
-        }
-
-        // Cannon barrel
-        ctx.strokeStyle = "#94a3b8";
-        ctx.lineWidth = 7;
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(top.x, top.y);
-        ctx.lineTo(tip_x, tip_y);
-        ctx.stroke();
-
-        // Pivot hub
-        ctx.fillStyle = "#3b82f6";
-        ctx.beginPath();
-        ctx.arc(top.x, top.y, 6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      draw_trajectory_and_markers() {
-        const ctx = this.ctx;
-        if (this.trail_points.length === 0) return;
-
-        // 1. Dashed trajectory path
-        ctx.save();
-        ctx.setLineDash([5, 4]);
-        ctx.strokeStyle = "#38bdf8";
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        this.trail_points.forEach((pt, idx) => {
-          const c = this.world_to_canvas(pt.x, pt.y);
-          if (idx === 0) ctx.moveTo(c.x, c.y);
-          else ctx.lineTo(c.x, c.y);
-        });
-        ctx.stroke();
-        ctx.restore();
-
-        // 2. Highlight Apex (Highest Point) once passed or completed
-        const stats = this.flight_stats;
-        if ((this.is_flying && this.elapsed_time >= stats.t_apex) || this.is_finished) {
-          const apex_px = this.world_to_canvas(stats.apex_x, stats.apex_y);
-
-          // Vertical drop-line from apex to ground
-          const apex_ground = this.world_to_canvas(stats.apex_x, 0);
-          ctx.save();
-          ctx.setLineDash([3, 3]);
-          ctx.strokeStyle = "rgba(251, 191, 36, 0.45)";
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.moveTo(apex_px.x, apex_px.y);
-          ctx.lineTo(apex_ground.x, apex_ground.y);
-          ctx.stroke();
-          ctx.restore();
-
-          // Glowing amber dot at Apex
-          ctx.fillStyle = "#fbbf24";
-          ctx.beginPath();
-          ctx.arc(apex_px.x, apex_px.y, 5.5, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Label badge for Apex
-          const label = `Max Height: ${stats.apex_y.toFixed(1)}m`;
-          ctx.font = "bold 11px 'Inter', sans-serif";
-          const text_w = ctx.measureText(label).width;
-          const badge_x = Math.min(Math.max(apex_px.x - text_w / 2 - 6, 52), PHYSICS_CONFIG.CANVAS_WIDTH - text_w - 45);
-          const badge_y = Math.max(apex_px.y - 26, 8);
-
-          ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
-          ctx.strokeStyle = "#fbbf24";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.roundRect(badge_x, badge_y, text_w + 12, 20, 5);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = "#fde68a";
-          ctx.textAlign = "left";
-          ctx.fillText(label, badge_x + 6, badge_y + 14);
-        }
-
-        // 3. Highlight Total Distance Travelled upon landing
-        if (this.is_finished) {
-          const land_px = this.world_to_canvas(stats.total_distance, 0);
-
-          ctx.fillStyle = "#10b981";
-          ctx.beginPath();
-          ctx.arc(land_px.x, land_px.y, 6, 0, Math.PI * 2);
-          ctx.fill();
-
-          const dist_label = `Distance: ${stats.total_distance.toFixed(1)}m`;
-          ctx.font = "bold 11px 'Inter', sans-serif";
-          const tw = ctx.measureText(dist_label).width;
-          const bx = Math.min(Math.max(land_px.x - tw / 2 - 6, 52), PHYSICS_CONFIG.CANVAS_WIDTH - tw - 40);
-          const by = land_px.y - 28;
-
-          ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
-          ctx.strokeStyle = "#10b981";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.roundRect(bx, by, tw + 12, 20, 5);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = "#a7f3d0";
-          ctx.textAlign = "left";
-          ctx.fillText(dist_label, bx + 6, by + 14);
-        }
-
-        // 4. Projectile Sphere at current position
-        const current = this.trail_points[this.trail_points.length - 1];
-        const ball_px = this.world_to_canvas(current.x, current.y);
-        ctx.fillStyle = "#f97316";
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(ball_px.x, ball_px.y, 6.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-
-      render() {
-        this.draw_grid_and_axes();
-        this.draw_launcher();
-        this.draw_trajectory_and_markers();
-      }
-    }
-
-    /**
-     * BoylesLawSimulation Class
-     * Handles draggable piston chamber, gas particle dynamics, and live P vs. V curve plotting.
-     */
-    class BoylesLawSimulation {
-      constructor(piston_canvas_id, graph_canvas_id) {
-        this.piston_canvas = document.getElementById(piston_canvas_id);
-        this.piston_ctx = this.piston_canvas.getContext("2d");
-
-        this.graph_canvas = document.getElementById(graph_canvas_id);
-        this.graph_ctx = this.graph_canvas.getContext("2d");
-
-        // Chamber geometry in logical canvas pixels (360 x 270)
-        this.chamber = {
-          x: 82,
-          y: 16,
-          w: 196,
-          h: 236,
-          piston_h: 16
-        };
-
-        // Simulation state
-        this.volume_l = BOYLES_CONFIG.REF_VOLUME_L;
-        this.is_dragging = false;
-        this.is_active = false;
-        this.anim_frame_id = null;
-
-        this.particles = this.create_particles(BOYLES_CONFIG.PARTICLE_COUNT);
-        this.bind_events();
-        this.sync_ui_and_graph();
-        this.draw_piston_chamber();
-      }
-
-      create_particles(count) {
-        const list = [];
-        const top_y = this.get_piston_y() + this.chamber.piston_h + 6;
-        const bottom_y = this.chamber.y + this.chamber.h - 6;
-
-        for (let i = 0; i < count; i++) {
-          const angle = Math.random() * Math.PI * 2;
-          const base_speed = 1.3 + Math.random() * 1.1;
-          list.push({
-            x: this.chamber.x + 12 + Math.random() * (this.chamber.w - 24),
-            y: top_y + Math.random() * Math.max(12, bottom_y - top_y),
-            vx: Math.cos(angle) * base_speed,
-            vy: Math.sin(angle) * base_speed,
-            r: 3.6
-          });
-        }
-        return list;
-      }
-
-      /**
-       * Maps current gas volume (0.5 L to 4.0 L) to piston top Y pixel coordinate
-       */
-      get_piston_y() {
-        const min_chamber_h = 34; // Visual height at 0.5 L
-        const max_chamber_h = this.chamber.h - this.chamber.piston_h - 14; // Visual height at 4.0 L
-        const ratio = (this.volume_l - BOYLES_CONFIG.MIN_VOLUME_L) /
-                      (BOYLES_CONFIG.MAX_VOLUME_L - BOYLES_CONFIG.MIN_VOLUME_L);
-        const gas_height_px = min_chamber_h + ratio * (max_chamber_h - min_chamber_h);
-        return (this.chamber.y + this.chamber.h) - gas_height_px - this.chamber.piston_h;
-      }
-
-      /**
-       * Converts pointer Y coordinate inside the piston canvas back into gas volume (L)
-       */
-      set_volume_from_pointer_y(canvas_y) {
-        const min_chamber_h = 34;
-        const max_chamber_h = this.chamber.h - this.chamber.piston_h - 14;
-        const target_piston_y = canvas_y - (this.chamber.piston_h / 2);
-        const gas_height_px = (this.chamber.y + this.chamber.h) - target_piston_y - this.chamber.piston_h;
-
-        const clamped_h = Math.max(min_chamber_h, Math.min(max_chamber_h, gas_height_px));
-        const ratio = (clamped_h - min_chamber_h) / (max_chamber_h - min_chamber_h);
-        const raw_vol = BOYLES_CONFIG.MIN_VOLUME_L + ratio * (BOYLES_CONFIG.MAX_VOLUME_L - BOYLES_CONFIG.MIN_VOLUME_L);
-
-        // Snap cleanly to 0.1 L increments
-        this.set_volume(Math.round(raw_vol * 10) / 10);
-      }
-
-      set_volume(new_volume_l) {
-        this.volume_l = Math.max(BOYLES_CONFIG.MIN_VOLUME_L, Math.min(BOYLES_CONFIG.MAX_VOLUME_L, new_volume_l));
-
-        // Keep all gas particles safely inside the compressed/expanded chamber bounds
-        const gas_top = this.get_piston_y() + this.chamber.piston_h + 5;
-        const gas_bottom = this.chamber.y + this.chamber.h - 5;
-        for (const p of this.particles) {
-          if (p.y < gas_top) {
-            p.y = gas_top + Math.random() * Math.max(4, (gas_bottom - gas_top) * 0.4);
-          }
-          if (p.y > gas_bottom) {
-            p.y = gas_bottom;
-          }
-        }
-
-        this.sync_ui_and_graph();
-        if (!this.is_active) {
-          this.draw_piston_chamber();
-        }
-      }
-
-      bind_events() {
-        const slider = document.getElementById("boyles-slider-volume");
-        const btn_reset = document.getElementById("boyles-btn-reset");
-
-        slider.addEventListener("input", (e) => {
-          this.set_volume(parseFloat(e.target.value));
-        });
-
-        btn_reset.addEventListener("click", () => {
-          this.set_volume(BOYLES_CONFIG.REF_VOLUME_L);
-        });
-
-        // Mouse & Touch dragging directly on the piston canvas
-        const get_canvas_y = (client_y) => {
-          const rect = this.piston_canvas.getBoundingClientRect();
-          return ((client_y - rect.top) / rect.height) * this.piston_canvas.height;
-        };
-
-        this.piston_canvas.addEventListener("mousedown", (e) => {
-          this.is_dragging = true;
-          this.set_volume_from_pointer_y(get_canvas_y(e.clientY));
-        });
-
-        window.addEventListener("mousemove", (e) => {
-          if (!this.is_dragging) return;
-          this.set_volume_from_pointer_y(get_canvas_y(e.clientY));
-        });
-
-        window.addEventListener("mouseup", () => {
-          this.is_dragging = false;
-        });
-
-        this.piston_canvas.addEventListener("touchstart", (e) => {
-          if (e.touches.length > 0) {
-            this.is_dragging = true;
-            this.set_volume_from_pointer_y(get_canvas_y(e.touches[0].clientY));
-          }
-        }, { passive: true });
-
-        this.piston_canvas.addEventListener("touchmove", (e) => {
-          if (!this.is_dragging || e.touches.length === 0) return;
-          this.set_volume_from_pointer_y(get_canvas_y(e.touches[0].clientY));
-        }, { passive: true });
-
-        window.addEventListener("touchend", () => {
-          this.is_dragging = false;
-        });
-      }
-
-      start() {
-        if (this.is_active) return;
-        this.is_active = true;
-        const loop = () => {
-          if (!this.is_active) return;
-          this.update_particles();
-          this.draw_piston_chamber();
-          this.anim_frame_id = requestAnimationFrame(loop);
-        };
-        this.anim_frame_id = requestAnimationFrame(loop);
-      }
-
-      stop() {
-        this.is_active = false;
-        if (this.anim_frame_id) {
-          cancelAnimationFrame(this.anim_frame_id);
-          this.anim_frame_id = null;
-        }
-      }
-
-      update_particles() {
-        const left_bound = this.chamber.x + 6;
-        const right_bound = this.chamber.x + this.chamber.w - 6;
-        const top_bound = this.get_piston_y() + this.chamber.piston_h + 5;
-        const bottom_bound = this.chamber.y + this.chamber.h - 5;
-
-        // Subtle visual agitation scaling with pressure while keeping constant-temperature average speed
-        const pressure_ratio = calculate_boyles_pressure(this.volume_l) / 100.0;
-        const speed_factor = 0.85 + Math.min(pressure_ratio, 3.0) * 0.15;
-
-        for (const p of this.particles) {
-          p.x += p.vx * speed_factor;
-          p.y += p.vy * speed_factor;
-
-          if (p.x - p.r < left_bound) {
-            p.x = left_bound + p.r;
-            p.vx = Math.abs(p.vx);
-          } else if (p.x + p.r > right_bound) {
-            p.x = right_bound - p.r;
-            p.vx = -Math.abs(p.vx);
-          }
-
-          if (p.y - p.r < top_bound) {
-            p.y = top_bound + p.r;
-            p.vy = Math.abs(p.vy);
-          } else if (p.y + p.r > bottom_bound) {
-            p.y = bottom_bound - p.r;
-            p.vy = -Math.abs(p.vy);
-          }
-        }
-      }
-
-      sync_ui_and_graph() {
-        const pressure = calculate_boyles_pressure(this.volume_l);
-
-        document.getElementById("boyles-slider-volume").value = this.volume_l.toFixed(1);
-        document.getElementById("boyles-label-volume").textContent = `${this.volume_l.toFixed(1)} L`;
-        document.getElementById("boyles-readout-volume").textContent = `${this.volume_l.toFixed(1)} L`;
-        document.getElementById("boyles-readout-pressure").textContent = `${pressure.toFixed(1)} kPa`;
-
-        const status_el = document.getElementById("boyles-dynamic-status");
-        if (Math.abs(this.volume_l - BOYLES_CONFIG.REF_VOLUME_L) < 0.05) {
-          status_el.textContent = `At the reference state, the gas occupies 2.0 L and exerts 100.0 kPa.`;
-        } else if (this.volume_l < BOYLES_CONFIG.REF_VOLUME_L) {
-          status_el.textContent = `When the gas is compressed to ${this.volume_l.toFixed(1)} L, particle wall collisions become more frequent and pressure rises to ${pressure.toFixed(1)} kPa.`;
-        } else {
-          status_el.textContent = `When the gas expands to ${this.volume_l.toFixed(1)} L, particles have more space to travel and pressure drops to ${pressure.toFixed(1)} kPa.`;
-        }
-
-        this.draw_pv_graph(this.volume_l, pressure);
-      }
-
-      draw_piston_chamber() {
-        const ctx = this.piston_ctx;
-        const w = this.piston_canvas.width;
-        const h = this.piston_canvas.height;
-        const ch = this.chamber;
-        const piston_y = this.get_piston_y();
-        const gas_top_y = piston_y + ch.piston_h;
-        const gas_height = (ch.y + ch.h) - gas_top_y;
-
-        ctx.clearRect(0, 0, w, h);
-
-        // Upper cylinder interior (above piston)
-        ctx.fillStyle = "#e8eff7";
-        ctx.beginPath();
-        ctx.roundRect(ch.x, ch.y, ch.w, ch.h, 8);
-        ctx.fill();
-
-        // Gas chamber fill (becomes slightly deeper blue under compression)
-        const pressure = calculate_boyles_pressure(this.volume_l);
-        const tint_alpha = Math.min(0.45, 0.14 + (pressure / 400.0) * 0.28);
-        ctx.fillStyle = `rgba(59, 130, 246, ${tint_alpha.toFixed(3)})`;
-        ctx.beginPath();
-        ctx.roundRect(ch.x, gas_top_y, ch.w, gas_height, [0, 0, 8, 8]);
-        ctx.fill();
-
-        // Gas molecules (blue spheres)
-        ctx.fillStyle = "#2563eb";
-        for (const p of this.particles) {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // Cylinder outer glass wall
-        ctx.strokeStyle = "#7c93ad";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.roundRect(ch.x, ch.y, ch.w, ch.h, 8);
-        ctx.stroke();
-
-        // Vertical piston shaft
-        const shaft_w = 14;
-        const shaft_x = ch.x + (ch.w - shaft_w) / 2;
-        const shaft_top = Math.max(ch.y + 8, piston_y - 78);
-        ctx.fillStyle = "#94a3b8";
-        ctx.strokeStyle = "#475569";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(shaft_x, shaft_top, shaft_w, piston_y - shaft_top + 2, [4, 4, 0, 0]);
-        ctx.fill();
-        ctx.stroke();
-
-        // Movable piston head bar
-        ctx.fillStyle = this.is_dragging ? "#1d4ed8" : "#3b5978";
-        ctx.strokeStyle = "#1e293b";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(ch.x - 4, piston_y, ch.w + 8, ch.piston_h, 5);
-        ctx.fill();
-        ctx.stroke();
-
-        // Subtle grip lines on piston head
-        ctx.strokeStyle = "rgba(255,255,255,0.45)";
-        ctx.lineWidth = 1.2;
-        const mid_x = ch.x + ch.w / 2;
-        const mid_y = piston_y + ch.piston_h / 2;
-        ctx.beginPath();
-        ctx.moveTo(mid_x - 16, mid_y - 2);
-        ctx.lineTo(mid_x + 16, mid_y - 2);
-        ctx.moveTo(mid_x - 16, mid_y + 2);
-        ctx.lineTo(mid_x + 16, mid_y + 2);
-        ctx.stroke();
-      }
-
-      draw_pv_graph(current_v, current_p) {
-        const ctx = this.graph_ctx;
-        const w = this.graph_canvas.width;
-        const h = this.graph_canvas.height;
-        const pad = { top: 20, right: 22, bottom: 42, left: 54 };
-        const plot_w = w - pad.left - pad.right;
-        const plot_h = h - pad.top - pad.bottom;
-
-        const v_min = BOYLES_CONFIG.MIN_VOLUME_L; // 0.5 L
-        const v_max = BOYLES_CONFIG.MAX_VOLUME_L; // 4.0 L
-        const p_max = BOYLES_CONFIG.MAX_PRESSURE_KPA; // 400 kPa
-
-        const to_px = (v, p) => ({
-          x: pad.left + ((v - v_min) / (v_max - v_min)) * plot_w,
-          y: (h - pad.bottom) - (p / p_max) * plot_h
-        });
-
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, w, h);
-
-        // Gridlines & Y-axis labels (0, 100, 200, 300, 400 kPa)
-        ctx.font = "11px 'Inter', sans-serif";
-        ctx.textAlign = "right";
-        for (let p = 0; p <= 400; p += 100) {
-          const pt = to_px(v_min, p);
-          ctx.strokeStyle = p === 0 ? "#475569" : "#e2e8f0";
-          ctx.lineWidth = p === 0 ? 1.5 : 1;
-          ctx.beginPath();
-          ctx.moveTo(pad.left, pt.y);
-          ctx.lineTo(w - pad.right, pt.y);
-          ctx.stroke();
-
-          ctx.fillStyle = "#64748b";
-          ctx.fillText(`${p}`, pad.left - 8, pt.y + 4);
-        }
-
-        // Vertical gridlines & X-axis labels (0.5, 1, 2, 3, 4 L)
-        const v_ticks = [0.5, 1, 2, 3, 4];
-        ctx.textAlign = "center";
-        for (const v of v_ticks) {
-          const pt = to_px(v, 0);
-          ctx.strokeStyle = v === 0.5 ? "#475569" : "#e2e8f0";
-          ctx.lineWidth = v === 0.5 ? 1.5 : 1;
-          ctx.beginPath();
-          ctx.moveTo(pt.x, pad.top);
-          ctx.lineTo(pt.x, h - pad.bottom);
-          ctx.stroke();
-
-          ctx.fillStyle = "#64748b";
-          ctx.fillText(`${v}`, pt.x, h - pad.bottom + 16);
-        }
-
-        // Axis Titles
-        ctx.fillStyle = "#475569";
-        ctx.font = "600 11px 'Inter', sans-serif";
-        ctx.fillText("Volume (L)", pad.left + plot_w / 2, h - 8);
-
-        ctx.save();
-        ctx.translate(15, pad.top + plot_h / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText("Pressure (kPa)", 0, 0);
-        ctx.restore();
-
-        // Dashed drop lines from active state point to X and Y axes
-        const active_pt = to_px(current_v, current_p);
-        ctx.save();
-        ctx.setLineDash([4, 4]);
-        ctx.strokeStyle = "#94a3b8";
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.moveTo(pad.left, active_pt.y);
-        ctx.lineTo(active_pt.x, active_pt.y);
-        ctx.lineTo(active_pt.x, h - pad.bottom);
-        ctx.stroke();
-        ctx.restore();
-
-        // Boyle's Law Hyperbolic Curve: P = 200 / V
-        ctx.strokeStyle = "#2563eb";
-        ctx.lineWidth = 2.8;
-        ctx.beginPath();
-        const steps = 120;
-        for (let i = 0; i <= steps; i++) {
-          const v = v_min + (i / steps) * (v_max - v_min);
-          const p = calculate_boyles_pressure(v);
-          const pt = to_px(v, p);
-          if (i === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        }
-        ctx.stroke();
-
-        // Active Orange Marker Dot
-        ctx.fillStyle = "#ea580c";
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(active_pt.x, active_pt.y, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-    }
-
-    /**
-     * Multi-View Portal Controller
-     * Handles clean view switching between Landing Page, Simulations, and Stub Pages.
-     */
-    const app = {
-      sim: null,
-      boyles_sim: null,
-
-      init() {
-        this.sim = new ProjectileSimulation("sim-canvas");
-        this.boyles_sim = new BoylesLawSimulation("boyles-piston-canvas", "boyles-graph-canvas");
-        this.navigate("home");
-      },
-
-      navigate(view_name, stub_title = "") {
-        const views = ["home", "projectile", "boyles", "stub"];
-        views.forEach((v) => {
-          document.getElementById(`view-${v}`).classList.add("hidden");
-        });
-
-        document.getElementById(`view-${view_name}`).classList.remove("hidden");
-
-        // Pause Boyle's Law particle animation loop when viewing other pages
-        if (this.boyles_sim) {
-          if (view_name === "boyles") {
-            this.boyles_sim.start();
-          } else {
-            this.boyles_sim.stop();
-          }
-        }
-
-        // Show top bar back button whenever user is inside a simulation or stub page
-        const nav_back = document.getElementById("nav-back-btn");
-        if (view_name === "home") {
-          nav_back.classList.add("hidden");
-          nav_back.classList.remove("inline-flex");
-        } else {
-          nav_back.classList.remove("hidden");
-          nav_back.classList.add("inline-flex");
-        }
-
-        if (view_name === "stub" && stub_title) {
-          document.getElementById("stub-title").textContent = stub_title;
-        }
-
-        if (view_name === "projectile" && this.sim) {
-          this.sim.render();
-        }
-      },
-
-      toggle_embed_guide() {
-        const drawer = document.getElementById("embed-guide-drawer");
-        const label = document.getElementById("embed-toggle-label");
-        const is_hidden = drawer.classList.contains("hidden");
-        drawer.classList.toggle("hidden");
-        label.textContent = is_hidden
-          ? "Hide Embed & Code Customization Guide"
-          : "Show Embed & Code Customization Guide";
-      },
-
-      copy_embed_snippet() {
-        const code_text = document.getElementById("embed-snippet-code").textContent;
-        const temp = document.createElement("textarea");
-        temp.value = code_text;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-
-        const btn = document.getElementById("copy-btn");
-        btn.textContent = "Copied!";
-        setTimeout(() => (btn.textContent = "Copy Snippet"), 1800);
-      }
-    };
-
-    window.onload = () => app.init();
-  </script>
 </body>
 </html>
