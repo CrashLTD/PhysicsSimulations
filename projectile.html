@@ -51,9 +51,14 @@
         <h1 class="text-xl sm:text-2xl font-bold text-slate-900">Projectile Motion Simulator</h1>
         <p class="text-sm text-slate-600">Fixed 200 m × 115 m coordinate frame • Standard Gravity (g = 9.81 m/s²)</p>
       </div>
-      <a href="index.html" class="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition">
-        <span>← Back to Landing Page</span>
-      </a>
+      <div class="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
+        <!-- Role-Based Assessment Action Button -->
+        <div id="assessment-action-container"></div>
+
+        <a href="index.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition">
+          <span>← Back to Landing Page</span>
+        </a>
+      </div>
     </div>
 
     <!-- Fixed Aspect-Ratio Simulation Viewport -->
@@ -480,7 +485,46 @@
       }
     }
 
-    window.onload = () => new ProjectileSimulation("sim-canvas");
+    function init_assessment_button(topic_id) {
+      const container = document.getElementById("assessment-action-container");
+      const user = localStorage.getItem("physics_lab_logged_in_user");
+      const role = localStorage.getItem("physics_lab_user_role");
+
+      if (!user || !role) {
+        container.innerHTML = `
+          <a href="login.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm transition">
+            <span>Sign in for Assessment</span>
+          </a>`;
+        return;
+      }
+
+      if (role === "teacher") {
+        container.innerHTML = `
+          <a href="assessment.html?topic=${topic_id}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm transition">
+            <span>Show Assessment scores</span>
+          </a>`;
+      } else {
+        const scores_db = JSON.parse(localStorage.getItem("physics_lab_assessment_scores") || "{}");
+        const has_taken = scores_db[topic_id] && scores_db[topic_id][user] !== undefined;
+
+        if (has_taken) {
+          container.innerHTML = `
+            <button type="button" disabled class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-200 text-slate-500 text-sm font-semibold cursor-not-allowed border border-slate-300">
+              <span>Youve already taken this quiz</span>
+            </button>`;
+        } else {
+          container.innerHTML = `
+            <a href="assessment.html?topic=${topic_id}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm transition">
+              <span>Take Assessment</span>
+            </a>`;
+        }
+      }
+    }
+
+    window.onload = () => {
+      new ProjectileSimulation("sim-canvas");
+      init_assessment_button("projectile");
+    };
   </script>
 </body>
 </html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assessment Portal — Physics Simulation Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5 text-left group focus:outline-none">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm group-hover:bg-blue-700 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 17c3.5-8 8.5-11 14-6m0 0h-4m4 0v4" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-bold text-slate-900 tracking-tight text-base sm:text-lg block leading-none">Physics Simulation Lab</span>
+          <span class="text-xs text-slate-500 font-medium">Assessment &amp; Gradebook Portal</span>
+        </div>
+      </a>
+
+      <a id="nav-back-sim" href="index.html" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition">
+        <span>← Back to Simulation</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+    <!-- Unauthenticated Warning View -->
+    <div id="view-unauthenticated" class="hidden bg-white border border-slate-200 rounded-2xl p-8 text-center max-w-lg mx-auto shadow-sm space-y-4">
+      <h1 class="text-xl font-bold text-slate-900">Sign In Required</h1>
+      <p class="text-sm text-slate-600">Please log in with a student or teacher account to access this assessment.</p>
+      <a href="login.html" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition">
+        Go to Login Page
+      </a>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- STUDENT QUIZ VIEW                                                   -->
+    <!-- =================================================================== -->
+    <section id="view-student-quiz" class="hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 mb-2">
+            Student Assessment · 10 Items
+          </span>
+          <h1 id="quiz-topic-title" class="text-2xl font-bold text-slate-900 tracking-tight">Topic Quiz</h1>
+          <p class="text-sm text-slate-600 mt-1">Logged in as <strong id="student-name-label" class="text-slate-900">Student</strong>. Select the best answer for each question below.</p>
+        </div>
+      </div>
+
+      <!-- Validation Notice Banner -->
+      <div id="quiz-validation-msg" class="hidden rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm font-medium text-amber-800">
+        Please answer all 10 questions before submitting your assessment.
+      </div>
+
+      <!-- Score Result Card (Shown after submission or if already completed) -->
+      <div id="quiz-score-banner" class="hidden bg-emerald-50 border-2 border-emerald-500/40 rounded-2xl p-6 text-center space-y-3 shadow-sm">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+          Assessment Submitted
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">
+          Your Score: <span id="student-score-display" class="text-emerald-700">0 / 10</span>
+        </h2>
+        <p class="text-sm text-slate-600 max-w-md mx-auto">
+          Your score has been recorded for your teacher. You can now return to the simulation page.
+        </p>
+        <div class="pt-2">
+          <a id="btn-return-after-quiz" href="index.html" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-sm transition">
+            <span>← Return to Simulation</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 10 Multiple Choice Questions Container -->
+      <form id="quiz-form" class="space-y-4">
+        <div id="questions-list" class="space-y-4"></div>
+
+        <div id="quiz-submit-row" class="pt-2 flex justify-end">
+          <button type="submit" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold text-sm shadow-sm transition">
+            Submit Assessment
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TEACHER SCORES & OVERRIDE VIEW                                      -->
+    <!-- =================================================================== -->
+    <section id="view-teacher-dashboard" class="hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
+            Teacher Gradebook &amp; Override Controls
+          </span>
+          <h1 id="teacher-topic-title" class="text-2xl font-bold text-slate-900 tracking-tight">Assessment Scores</h1>
+          <p class="text-sm text-slate-600 mt-1">Monitor student completion status, view scores out of 10, or reset an attempt to allow a retake.</p>
+        </div>
+      </div>
+
+      <!-- Student Status Table -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-500">
+                <th class="py-3.5 px-5">Student Account</th>
+                <th class="py-3.5 px-5">Quiz Status</th>
+                <th class="py-3.5 px-5">Score</th>
+                <th class="py-3.5 px-5 text-right">Teacher Override</th>
+              </tr>
+            </thead>
+            <tbody id="teacher-scores-tbody" class="divide-y divide-slate-200 text-sm"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PYTHON-STYLE ASSESSMENT & SCORE MANAGEMENT ENGINE -->
+  <script>
+    const STORAGE_KEY = "physics_lab_logged_in_user";
+    const ROLE_STORAGE_KEY = "physics_lab_user_role";
+    const SCORES_STORAGE_KEY = "physics_lab_assessment_scores";
+
+    /**
+     * Roster of student accounts matching login.html
+     */
+    const STUDENT_ACCOUNTS = ["Jasmin", "Yaghnna", "Kyla", "Ellen"];
+
+    /**
+     * Hardcoded 10-question multiple choice banks per topic
+     */
+    const QUIZ_BANK = {
+      projectile: {
+        title: "Projectile Motion Assessment",
+        back_url: "projectile.html",
+        questions: [
+          {
+            q: "1. What is the shape of a projectile's trajectory under uniform gravity (ignoring air resistance)?",
+            options: ["Straight line", "Parabolic curve", "Circular arc", "Exponential curve"],
+            answer: 1
+          },
+          {
+            q: "2. Which launch angle produces the maximum horizontal range when launching from ground level (h₀ = 0 m)?",
+            options: ["30°", "45°", "60°", "90°"],
+            answer: 1
+          },
+          {
+            q: "3. At the highest point (apex) of a projectile's flight, what is its vertical velocity component (vᵧ)?",
+            options: ["Equal to initial velocity v₀", "9.81 m/s", "0 m/s", "Maximum downward speed"],
+            answer: 2
+          },
+          {
+            q: "4. Ignoring air resistance, how does the horizontal velocity (vₓ) of a projectile change during flight?",
+            options: ["It increases steadily", "It decreases to zero at the apex", "It remains constant", "It reverses direction"],
+            answer: 2
+          },
+          {
+            q: "5. What is the constant vertical acceleration acting on a projectile near Earth's surface?",
+            options: ["0 m/s²", "4.90 m/s² upward", "9.81 m/s² downward", "40.0 m/s² downward"],
+            answer: 2
+          },
+          {
+            q: "6. If you launch a projectile at 90° straight upward, what will its total horizontal distance (range) be?",
+            options: ["0 m", "100 m", "200 m", "Equal to its maximum height"],
+            answer: 0
+          },
+          {
+            q: "7. Increasing the initial launch height (h₀) while keeping angle and speed constant will:",
+            options: ["Decrease total flight time", "Increase total flight time and range", "Have no effect on range", "Decrease maximum height"],
+            answer: 1
+          },
+          {
+            q: "8. Which two launch angles from ground level yield the exact same horizontal range at the same initial speed?",
+            options: ["15° and 45°", "20° and 60°", "30° and 60°", "40° and 80°"],
+            answer: 2
+          },
+          {
+            q: "9. Doubling the initial velocity (v₀) of a projectile launched from ground level affects the maximum height by a factor of:",
+            options: ["2×", "3×", "4×", "0.5×"],
+            answer: 2
+          },
+          {
+            q: "10. Which factor determines how long a horizontally launched projectile (θ = 0°) stays in the air?",
+            options: ["Initial horizontal velocity only", "Initial launch height (h₀) and gravity", "Mass of the projectile", "Target distance"],
+            answer: 1
+          }
+        ]
+      },
+      boyles: {
+        title: "Boyle's Law Assessment",
+        back_url: "boyles.html",
+        questions: [
+          {
+            q: "1. Which variable must remain constant for Boyle's Law to apply to a fixed amount of gas?",
+            options: ["Pressure", "Volume", "Temperature", "Density"],
+            answer: 2
+          },
+          {
+            q: "2. What is the mathematical relationship between pressure (P) and volume (V) in Boyle's Law?",
+            options: ["Directly proportional (P/V = k)", "Inversely proportional (P₁V₁ = P₂V₂)", "Exponentially related", "Independent of each other"],
+            answer: 1
+          },
+          {
+            q: "3. If the volume of a gas is compressed to half its original size at constant temperature, what happens to its absolute pressure?",
+            options: ["It is halved", "It stays the same", "It doubles", "It quadruples"],
+            answer: 2
+          },
+          {
+            q: "4. In the simulation's reference state, 2.0 L of gas exerts 100 kPa. What is the constant product PV?",
+            options: ["50 kPa·L", "100 kPa·L", "200 kPa·L", "400 kPa·L"],
+            answer: 2
+          },
+          {
+            q: "5. Using PV = 200 kPa·L, what is the gas pressure when the piston is compressed to a volume of 0.5 L?",
+            options: ["100 kPa", "200 kPa", "300 kPa", "400 kPa"],
+            answer: 3
+          },
+          {
+            q: "6. Using PV = 200 kPa·L, what is the gas pressure when the volume is expanded to 4.0 L?",
+            options: ["25 kPa", "50 kPa", "100 kPa", "800 kPa"],
+            answer: 1
+          },
+          {
+            q: "7. Why does gas pressure increase when the piston compresses the gas into a smaller volume?",
+            options: ["Gas molecules grow larger", "Molecules collide with the container walls more frequently", "Gravity pulls harder on the gas", "The number of molecules increases"],
+            answer: 1
+          },
+          {
+            q: "8. What is the shape of a Pressure vs. Volume graph at constant temperature?",
+            options: ["A straight horizontal line", "A straight line through the origin", "A downward-sloping curve (hyperbola)", "An upward-opening parabola"],
+            answer: 2
+          },
+          {
+            q: "9. A sample of gas occupies 3.0 L at 100 kPa. If pressure increases to 150 kPa at constant temperature, what is the new volume?",
+            options: ["1.5 L", "2.0 L", "4.5 L", "6.0 L"],
+            answer: 1
+          },
+          {
+            q: "10. Which real-world example best demonstrates Boyle's Law?",
+            options: ["A hot air balloon rising as air is heated", "Pushing down the plunger of a sealed syringe increases internal air pressure", "A metal bridge expanding on a hot summer day", "Water boiling at 100 °C"],
+            answer: 1
+          }
+        ]
+      }
+    };
+
+    function get_scores_db() {
+      return JSON.parse(localStorage.getItem(SCORES_STORAGE_KEY) || "{}");
+    }
+
+    function save_scores_db(db) {
+      localStorage.setItem(SCORES_STORAGE_KEY, JSON.stringify(db));
+    }
+
+    function render_student_view(topic_id, quiz_data, student_name) {
+      document.getElementById("view-student-quiz").classList.remove("hidden");
+      document.getElementById("quiz-topic-title").textContent = quiz_data.title;
+      document.getElementById("student-name-label").textContent = student_name;
+      document.getElementById("btn-return-after-quiz").href = quiz_data.back_url;
+
+      const db = get_scores_db();
+      const existing_score = db[topic_id] ? db[topic_id][student_name] : undefined;
+
+      // If student already took the quiz (e.g., refreshed page), lock quiz and show score
+      if (existing_score !== undefined) {
+        document.getElementById("quiz-form").classList.add("hidden");
+        document.getElementById("quiz-score-banner").classList.remove("hidden");
+        document.getElementById("student-score-display").textContent = `${existing_score} / ${quiz_data.questions.length}`;
+        return;
+      }
+
+      const questions_container = document.getElementById("questions-list");
+      questions_container.innerHTML = quiz_data.questions.map((item, q_idx) => {
+        const options_html = item.options.map((opt_text, o_idx) => `
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition">
+            <input type="radio" name="question_${q_idx}" value="${o_idx}" class="w-4 h-4 text-blue-600 focus:ring-blue-500" />
+            <span class="text-sm text-slate-700">${opt_text}</span>
+          </label>
+        `).join("");
+
+        return `
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <p class="font-semibold text-slate-900 text-sm sm:text-base">${item.q}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              ${options_html}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const quiz_form = document.getElementById("quiz-form");
+      const validation_msg = document.getElementById("quiz-validation-msg");
+
+      quiz_form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        let score = 0;
+        for (let i = 0; i < quiz_data.questions.length; i++) {
+          const selected = quiz_form.querySelector(`input[name="question_${i}"]:checked`);
+          if (!selected) {
+            validation_msg.classList.remove("hidden");
+            validation_msg.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+          }
+          if (parseInt(selected.value, 10) === quiz_data.questions[i].answer) {
+            score++;
+          }
+        }
+
+        validation_msg.classList.add("hidden");
+
+        // Persist student's score
+        const updated_db = get_scores_db();
+        if (!updated_db[topic_id]) {
+          updated_db[topic_id] = {};
+        }
+        updated_db[topic_id][student_name] = score;
+        save_scores_db(updated_db);
+
+        // Display final score and hide form
+        quiz_form.classList.add("hidden");
+        document.getElementById("quiz-score-banner").classList.remove("hidden");
+        document.getElementById("student-score-display").textContent = `${score} / ${quiz_data.questions.length}`;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    function render_teacher_view(topic_id, quiz_data) {
+      document.getElementById("view-teacher-dashboard").classList.remove("hidden");
+      document.getElementById("teacher-topic-title").textContent = `${quiz_data.title} — Student Scores`;
+
+      const tbody = document.getElementById("teacher-scores-tbody");
+
+      function refresh_table() {
+        const db = get_scores_db();
+        const topic_scores = db[topic_id] || {};
+
+        tbody.innerHTML = STUDENT_ACCOUNTS.map((student) => {
+          const has_taken = topic_scores[student] !== undefined;
+          const score_val = topic_scores[student];
+
+          const status_badge = has_taken
+            ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Completed</span>`
+            : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">Not yet taken</span>`;
+
+          const score_cell = has_taken
+            ? `<span class="font-bold text-slate-900">${score_val} / ${quiz_data.questions.length}</span>`
+            : `<span class="text-slate-400">—</span>`;
+
+          const override_btn = has_taken
+            ? `<button type="button" data-student="${student}" class="btn-override px-3.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold transition">
+                 Override / Reset Retake
+               </button>`
+            : `<button type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-semibold cursor-not-allowed">
+                 Ready to Take
+               </button>`;
+
+          return `
+            <tr class="hover:bg-slate-50/70 transition">
+              <td class="py-4 px-5 font-semibold text-slate-900">${student}</td>
+              <td class="py-4 px-5">${status_badge}</td>
+              <td class="py-4 px-5">${score_cell}</td>
+              <td class="py-4 px-5 text-right">${override_btn}</td>
+            </tr>
+          `;
+        }).join("");
+
+        // Attach override reset listeners
+        tbody.querySelectorAll(".btn-override").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const target_student = btn.getAttribute("data-student");
+            const current_db = get_scores_db();
+            if (current_db[topic_id]) {
+              delete current_db[topic_id][target_student];
+              save_scores_db(current_db);
+            }
+            refresh_table();
+          });
+        });
+      }
+
+      refresh_table();
+    }
+
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const topic_id = params.get("topic") === "boyles" ? "boyles" : "projectile";
+      const quiz_data = QUIZ_BANK[topic_id];
+
+      document.getElementById("nav-back-sim").href = quiz_data.back_url;
+
+      const user = localStorage.getItem(STORAGE_KEY);
+      const role = localStorage.getItem(ROLE_STORAGE_KEY);
+
+      if (!user || !role) {
+        document.getElementById("view-unauthenticated").classList.remove("hidden");
+        return;
+      }
+
+      if (role === "teacher") {
+        render_teacher_view(topic_id, quiz_data);
+      } else {
+        render_student_view(topic_id, quiz_data, user);
+      }
+    };
+  </script>
+</body>
+</html>

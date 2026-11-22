@@ -48,9 +48,14 @@
         <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Boyle's Law Simulation</h1>
         <p class="text-sm sm:text-base text-slate-600 mt-1">Move the piston or adjust the volume slider to explore how gas pressure changes.</p>
       </div>
-      <a href="index.html" class="self-start inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition shrink-0">
-        <span>← Back to Landing Page</span>
-      </a>
+      <div class="flex flex-wrap items-center gap-2.5 self-start shrink-0">
+        <!-- Role-Based Assessment Action Button -->
+        <div id="assessment-action-container"></div>
+
+        <a href="index.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-sm font-semibold transition">
+          <span>← Back to Landing Page</span>
+        </a>
+      </div>
     </div>
 
     <!-- Two-Column Experiment & Graph Grid -->
@@ -495,7 +500,46 @@
       }
     }
 
-    window.onload = () => new BoylesLawSimulation("boyles-piston-canvas", "boyles-graph-canvas");
+    function init_assessment_button(topic_id) {
+      const container = document.getElementById("assessment-action-container");
+      const user = localStorage.getItem("physics_lab_logged_in_user");
+      const role = localStorage.getItem("physics_lab_user_role");
+
+      if (!user || !role) {
+        container.innerHTML = `
+          <a href="login.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm transition">
+            <span>Sign in for Assessment</span>
+          </a>`;
+        return;
+      }
+
+      if (role === "teacher") {
+        container.innerHTML = `
+          <a href="assessment.html?topic=${topic_id}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-sm transition">
+            <span>Show Assessment scores</span>
+          </a>`;
+      } else {
+        const scores_db = JSON.parse(localStorage.getItem("physics_lab_assessment_scores") || "{}");
+        const has_taken = scores_db[topic_id] && scores_db[topic_id][user] !== undefined;
+
+        if (has_taken) {
+          container.innerHTML = `
+            <button type="button" disabled class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-200 text-slate-500 text-sm font-semibold cursor-not-allowed border border-slate-300">
+              <span>Youve already taken this quiz</span>
+            </button>`;
+        } else {
+          container.innerHTML = `
+            <a href="assessment.html?topic=${topic_id}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm transition">
+              <span>Take Assessment</span>
+            </a>`;
+        }
+      }
+    }
+
+    window.onload = () => {
+      new BoylesLawSimulation("boyles-piston-canvas", "boyles-graph-canvas");
+      init_assessment_button("boyles");
+    };
   </script>
 </body>
 </html>
